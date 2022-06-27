@@ -49,4 +49,5 @@
         @endif
 
     </ul>
+    @include('partials/language_switcher')
 </aside>
