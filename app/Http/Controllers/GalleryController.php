@@ -6,57 +6,38 @@ use App\Models\Gallery;
 use App\Models\Photo;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class GalleryController extends Controller
 {
 
     /**
-     * Show gallery list
-     * 
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
         $galleries = Gallery::all();
-        return view('gallery.index')->with('galleries', $galleries);
+        return view('gallery.index')->with([
+            'galleries' => $galleries
+        ]);
     }
 
     /**
-     * Shows gallery item
-     * 
-     * @param Request $request
-     * 
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
-     */
-    public function show(Request $request)
-    {
-        $currentGallery = Gallery::findOrFail($request->gallery_id);
-        $photos = Photo::where('gallery_id', $request->gallery_id)->get();
-
-        return view('gallery.show')
-            ->with('gallery', $currentGallery)
-            ->with('photos', $photos);
-    }
-
-
-    /**
-     * Creates new gallery
-     * 
-     * @return \Illuminate\Contracts\View\View|\Illuminate\Contracts\View\Factory
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
         return view('gallery.create');
     }
 
-
     /**
-     * Saves new gallery
-     * 
-     * @param Request $request
-     * 
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StoreGalleryRequest  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -67,6 +48,7 @@ class GalleryController extends Controller
         ]);
 
         $coverImage = $request->file('cover_image');
+        // TODO: More validation is needed !
         if (!$coverImage) {
             $coverImageName = 'placeholder.png';
         } else {
@@ -76,37 +58,65 @@ class GalleryController extends Controller
 
         Gallery::create([
             'name' => htmlspecialchars($request->name),
-            'description' => $request->description,
+            'description' => htmlspecialchars($request->description),
             'owner_id' => intval($request->user->id),
             'cover_image' => htmlspecialchars($coverImageName),
         ]);
 
-        return redirect()->route('gallery.index')->with('success', 'Létrehoztad a "' . $request->name . '" nevű galériádat.');
+        return redirect()->route('gallery.index')->with([
+            'success' => 'Létrehoztad a "' . $request->name . '" nevű galériádat.'
+        ]);
     }
 
-
     /**
-     * TODO: Updates gellery item
-     * 
-     * @param Request $request
-     * 
-     * @return [type]
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Gallery  $goal
+     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function show(Gallery $gallery)
     {
-        dd($request);
+        $photos = Photo::where('gallery_id', $gallery->id)->get();
+
+        return view('gallery.show')->with([
+            'gallery' => $gallery,
+            'photos' => $photos,
+        ]);
     }
 
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Gallery  $Gallery
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Gallery $gallery)
+    {
+        return view('gallery.edit')->with([
+            'gallery' => $gallery,
+        ]);
+    }
 
     /**
-     * TODO: Deletes gallery item
-     * 
-     * @param Request $request
-     * 
-     * @return [type]
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdateGalleryRequest  $request
+     * @param  \App\Models\Gallery  $gallery
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function update(Request $request, Gallery $gallery)
     {
-        dd($request);
+        dd($gallery);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Gallery  $gallery
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Gallery $gallery)
+    {
+        dd($gallery);
     }
 }

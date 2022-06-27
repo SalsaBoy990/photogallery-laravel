@@ -4,7 +4,7 @@
 
 <x-breadcrumb :pageTitle="'Új kép feltöltése'" :parentPage="$gallery->name" :entityId="$gallery->id"></x-breadcrumb>
 <div class="w-full p-4 bg-sky-100">
-  <h1 class="text-left text-2xl font-bold font-serif mb-3">Új kép feltöltése ide: {{ $gallery->name }}</h1>
+  <h1 class="text-left text-2xl font-bold font-serif mb-3">{{ __('Upload new photo here: ') }}{{ $gallery->name }}</h1>
 </div>
 @stop
 
@@ -16,7 +16,7 @@
     <div class="max-w-md">
       <div class="grid grid-cols-1 gap-6">
 
-        <form action="{!! action('App\Http\Controllers\PhotoController@store') !!}" method="POST"
+        <form action="{{ route('photo.store') }}" method="POST"
           enctype="multipart/form-data" accept-charset="UTF-8">
           @csrf
 

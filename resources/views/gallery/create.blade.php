@@ -4,7 +4,7 @@
 
 <x-breadcrumb :pageTitle="'Új képgaléria'"></x-breadcrumb>
 <div class="w-full p-4 bg-sky-100">
-  <h1 class="text-left text-4xl font-bold font-serif mb-3">Új képgaléria készítése</h1>
+  <h1 class="text-left text-4xl font-bold font-serif mb-3">{{__('Create a new photo gallery') }}</h1>
   <p>Készíts új képgalériát és töltsd fel a képeket!</p>
 </div>
 @stop

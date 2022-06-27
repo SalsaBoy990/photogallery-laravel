@@ -12,7 +12,7 @@
             data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
-    <h1 class="text-left text-4xl font-bold font-serif">Képgalériák listája</h1>
+    <h1 class="text-left text-4xl font-bold font-serif">{{ __('Gallery list')}}</h1>
 </div>
 @stop
 
