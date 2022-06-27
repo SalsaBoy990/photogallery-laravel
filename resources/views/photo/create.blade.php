@@ -22,7 +22,7 @@
 
           <div class="block mb-5">
             <label for="title" class="form-label text-gray-700">Képcím</label>
-            <input type="text" id="title" name="title" va class="form-control mt-1 block w-full
+            <input type="text" id="title" name="title" value="{{ old('title') }}" class="form-control mt-1 block w-full
         rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200
         focus:ring-opacity-50" placeholder="A kép címe">
 
@@ -35,9 +35,12 @@
           </div>
           <div class="block mb-5">
             <label for="description" class="form-label text-gray-700">Képleírás</label>
-            <input type="text" id="description" name="description" class="form-control mt-1 block w-full
-                    rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                    focus:ring-opacity-50" placeholder="A kép rövid leírása">
+            <textarea class="form-control mt-1 block w-full px-3 py-1.5
+                text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300
+                rounded transition ease-in-out m-0focus:text-gray-700 focus:bg-white focus:border-blue-600
+                focus:outline-none" id="description" name="description" rows="5" placeholder="A kép rövid leírása"
+              max="255">{{ old('description') }}</textarea>
+
 
             @if ($errors->has('description'))
             <div class="alert mt-2 text-sm text-rose-500">
@@ -50,8 +53,8 @@
           <div class="block mb-5">
             <label for="location" class="form-label text-gray-700">Helyszín</label>
             <input type="text" id="location" name="location" class="form-control mt-1 block w-full
-                                        rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200
-                                        focus:ring-opacity-50" placeholder="A kép helyszíne">
+               rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200
+               focus:ring-opacity-50" placeholder="A kép helyszíne" value="{{ old('location') }}">
 
             @if ($errors->has('location'))
             <div class="alert mt-2 text-sm text-rose-500">
@@ -63,7 +66,7 @@
 
           <div class="hidden">
             <label for="owner_id">Owner Id</label>
-            <input class="hidden" name="owner_id" type="number" value="1" id="owner_id">
+            <input class="hidden" name="owner_id" type="number" value="{{ Auth::id() }}" id="owner_id">
           </div>
 
           <div class="hidden">

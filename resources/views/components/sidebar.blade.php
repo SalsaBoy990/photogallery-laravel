@@ -1,30 +1,34 @@
-<aside id="sidebar" class="bg-side-nav w-full md:w-1/6 lg:w-1/6 border-r border-side-nav hidden md:block lg:block">
+<aside id="sidebar" class="bg-side-nav border-side-nav hidden w-full border-r md:block md:w-1/6 lg:block lg:w-1/6">
 
     <ul class="list-reset flex flex-col">
 
         @if (Route::has('login'))
         @auth
 
-        <li class=" w-full h-full py-3 px-2 border-b border-light-border">
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ route('gallery.index') }}"
-                class="font-sans font-hairline hover:font-normal text-base hover:text-sky-800 text-nav-item no-underline">
-                <i class="fas fa-tachometer-alt float-left mx-2 fa-adjust-4"></i>
+                class="text-nav-item {{ Request::is('*gallery') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
+                <i class="fas fa-tachometer-alt fa-adjust-4 float-left mx-2"></i>
                 Galériák
-                <span><i class="fas fa-angle-right float-right fa-adjust-4"></i></span>
+                <span><i class="fas fa-angle-right fa-adjust-4 float-right"></i></span>
             </a>
         </li>
-        <li class="w-full h-full py-3 px-2 border-b border-light-border">
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ route('gallery.create') }}"
-                class="font-sans font-normal hover:text-sky-800 text-base text-nav-item no-underline">
+                class="font-sanshover:text-sky-800 text-nav-item {{ Request::is('*gallery/create') ? ' font-bold' : '' }} text-base no-underline">
                 <i class="fas fa-solid fa-images mx-2"></i>
                 Új Képgaléria</a>
         </li>
-
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
+            <a href="{{ route('goal.index') }}"
+                class="text-nav-item {{ Request::is('*goal*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
+                <i class="fas fa-crosshairs mx-2"></i>
+                Bakancslista</a>
+        </li>
         @else
-
-        <li class="w-full h-full py-3 px-2 border-b border-light-border">
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ url('login') }}"
-                class="font-sans font-normal hover:text-sky-900 text-base text-nav-item no-underline">
+                class="text-nav-item font-sans text-base font-normal no-underline hover:text-sky-900">
                 <i class="fa-solid fa-user-check mx-2"></i>
                 Bejelentkezés
             </a>
@@ -32,9 +36,9 @@
 
 
         @if (Route::has('register'))
-        <li class="w-full h-full py-3 px-2 border-b border-light-border">
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ url('register') }}"
-                class="font-sans font-normal hover:text-sky-800 text-base text-nav-item no-underline">
+                class="text-nav-item font-sans text-base font-normal no-underline hover:text-sky-800">
                 <i class="fa-solid fa-user-plus mx-2"></i>
                 Regisztráció
             </a>

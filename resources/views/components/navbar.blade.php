@@ -12,22 +12,6 @@
             {{ $userName }}</a>
         <div id="ProfileDropDown" class="rounded hidden shadow-md bg-white absolute top-0 right-0 mt-12 mr-1">
             <ul>
-                <!--<li>
-                    <a href="#!" class="
-                            block
-                            px-6
-                            py-2
-                            border-b border-gray-200
-                            w-full
-                            hover:bg-grey-light
-                            focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600
-                            transition
-                            duration-500
-                            cursor-pointer
-                          ">
-                        Fiókbeállítások
-                    </a>
-                </li> -->
                 <li>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

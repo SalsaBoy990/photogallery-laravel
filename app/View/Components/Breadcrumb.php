@@ -8,6 +8,7 @@ class Breadcrumb extends Component
 {
 
     public string $pageTitle;
+    public string $indexPage;
     public string $parentPage;
     public string $indexPageRoute;
     public string $parentPageRoute;
@@ -22,9 +23,10 @@ class Breadcrumb extends Component
      *
      * @return void
      */
-    public function __construct(string $indexPageRoute = 'gallery.index', string $parentPageRoute = 'gallery.show', string $pageTitle = '', string $parentPage = '', int $entityId = 0, int $parentEntityId = 0)
+    public function __construct(string $indexPage = 'Galériák', string $parentPage = '', string $pageTitle = '', string $indexPageRoute = 'gallery.index', string $parentPageRoute = 'gallery.show', int $entityId = 0, int $parentEntityId = 0)
     {
         $this->pageTitle = $pageTitle;
+        $this->indexPage = $indexPage;
         $this->parentPage = $parentPage;
         $this->indexPageRoute = $indexPageRoute;
         $this->parentPageRoute = $parentPageRoute;
