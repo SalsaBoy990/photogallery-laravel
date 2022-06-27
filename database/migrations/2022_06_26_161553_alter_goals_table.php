@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('goals', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->text('description');
-            $table->string('image');
-            $table->timestamps();
+        Schema::table('goals', function (Blueprint $table) {
+            $table->unsignedInteger('order')->after('image');
+            $table->boolean('completed')->after('image');
         });
     }
 
@@ -29,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goals');
+        Schema::table('goals', function (Blueprint $table) {
+            $table->removeColumn('order');
+            $table->removeColumn('completed');
+        });
     }
 };

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreGoalRequest;
 use App\Http\Requests\UpdateGoalRequest;
 use App\Models\Goal;
+use Illuminate\Http\Request;
 
 class GoalController extends Controller
 {
@@ -15,7 +16,15 @@ class GoalController extends Controller
      */
     public function index()
     {
-        //
+        $goals = Goal::orderBy('order')->get();
+        $completed = Goal::where('completed', 1)->count();
+        $percentage = round($completed / count($goals) * 100);
+
+        return view('goal.index')->with([
+            'goals' => $goals,
+            'completed' => $completed,
+            'percentage' => $percentage
+        ]);
     }
 
     /**
@@ -25,7 +34,7 @@ class GoalController extends Controller
      */
     public function create()
     {
-        //
+        return view('goal.create');
     }
 
     /**
@@ -34,9 +43,24 @@ class GoalController extends Controller
      * @param  \App\Http\Requests\StoreGoalRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreGoalRequest $request)
+    public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'unique:goals', 'min:10', 'max:255'],
+            'description' => ['required', 'min:10', 'max:512'],
+            'completed' => ['boolean'],
+        ]);
+
+        Goal::create([
+            'title' => htmlspecialchars($request->title),
+            'description' => $request->description,
+            'completed' => intval($request->completed)
+        ]);
+
+        //return $this->index();
+        return redirect()->route('goal.index')->with([
+            'success' => '<b class="mr-1">' . $request->title . '</b>' . ' hozzáadva a bakancslistádhoz.'
+        ]);
     }
 
     /**
@@ -47,7 +71,9 @@ class GoalController extends Controller
      */
     public function show(Goal $goal)
     {
-        //
+        return view('goal.show')->with([
+            'goal' => $goal,
+        ]);
     }
 
     /**
@@ -58,7 +84,9 @@ class GoalController extends Controller
      */
     public function edit(Goal $goal)
     {
-        //
+        return view('goal.edit')->with([
+            'goal' => $goal,
+        ]);
     }
 
     /**
@@ -68,9 +96,23 @@ class GoalController extends Controller
      * @param  \App\Models\Goal  $goal
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateGoalRequest $request, Goal $goal)
+    public function update(Request $request, Goal $goal)
     {
-        //
+        $request->validate([
+            'title' => ['required', 'unique:goals', 'min:10', 'max:255'],
+            'description' => ['required', 'min:10', 'max:512'],
+            'completed' => ['boolean'],
+        ]);
+
+        $goal->update([
+            'title' => htmlspecialchars($request->title),
+            'description' => $request->description,
+            'completed' => intval($request->completed)
+        ]);
+
+        return redirect()->route('goal.index')->with([
+            'success' => '<b class="mr-1">' . $request->title . '</b>' . ' sikeresen módosítva.'
+        ]);
     }
 
     /**
@@ -81,6 +123,10 @@ class GoalController extends Controller
      */
     public function destroy(Goal $goal)
     {
-        //
+        $oldTitle = $goal->title;
+        $goal->deleteOrFail();
+        return redirect()->route('goal.index')->with([
+            'success' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+        ]);
     }
 }

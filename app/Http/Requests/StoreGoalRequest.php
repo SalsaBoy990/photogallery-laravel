@@ -13,7 +13,7 @@ class StoreGoalRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,11 @@ class StoreGoalRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            [
+                'title' => ['required', 'unique:goals', 'min:20', 'max:255'],
+                'description' => ['required', 'min:20', 'max:512'],
+                'completed' => ['required', 'boolean'],
+            ]
         ];
     }
 }
