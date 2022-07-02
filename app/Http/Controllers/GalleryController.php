@@ -6,6 +6,7 @@ use App\Models\Gallery;
 use App\Models\Photo;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GalleryController extends Controller
 {
@@ -17,7 +18,7 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        $galleries = Gallery::all();
+        $galleries = Gallery::where('user_id', Auth::user()->id)->get();
         return view('gallery.index')->with([
             'galleries' => $galleries
         ]);
@@ -57,10 +58,10 @@ class GalleryController extends Controller
         }
 
         Gallery::create([
-            'name' => htmlspecialchars($request->name),
-            'description' => htmlspecialchars($request->description),
-            'owner_id' => intval($request->user->id),
-            'cover_image' => htmlspecialchars($coverImageName),
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => intval($request->user->id),
+            'cover_image' => htmlentities($coverImageName),
         ]);
 
         return redirect()->route('gallery.index')->with([

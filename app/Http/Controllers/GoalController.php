@@ -52,8 +52,8 @@ class GoalController extends Controller
         ]);
 
         Goal::create([
-            'title' => htmlspecialchars($request->title),
-            'description' => $request->description,
+            'title' => htmlentities($request->title),
+            'description' => htmlentities($request->description),
             'completed' => intval($request->completed)
         ]);
 
@@ -105,8 +105,8 @@ class GoalController extends Controller
         ]);
 
         $goal->update([
-            'title' => htmlspecialchars($request->title),
-            'description' => $request->description,
+            'title' => htmlentities($request->title),
+            'description' => htmlentities($request->description),
             'completed' => intval($request->completed)
         ]);
 

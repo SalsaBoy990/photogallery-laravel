@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Casts\HtmlEntitiesCast;
 
 class User extends Authenticatable
 {
@@ -39,6 +40,18 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'name' => HtmlEntitiesCast::class,
+        'email' => HtmlEntitiesCast::class,
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * User has many galleries
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function galleries()
+    {
+        return $this->hasMany(Gallery::class);
+    }
 }

@@ -46,7 +46,7 @@ class PhotoController extends Controller
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
             'image' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
-            'owner_id' => ['required'],
+            'user_id' => ['required'],
             'gallery_id' => ['required'],
         ]);
 
@@ -61,7 +61,7 @@ class PhotoController extends Controller
             'location' => htmlspecialchars($request->location),
             'image' => htmlspecialchars($imageName),
             'gallery_id' => intval($request->gallery_id),
-            'owner_id' => intval($request->owner_id),
+            'user_id' => intval($request->user_id),
         ]);
 
         return redirect()->route('gallery.show', $request->gallery_id)->with([
@@ -111,7 +111,7 @@ class PhotoController extends Controller
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
-            'owner_id' => ['required'],
+            'user_id' => ['required'],
             'gallery_id' => ['required'],
         ]);
 
@@ -120,7 +120,7 @@ class PhotoController extends Controller
             'description' => htmlspecialchars($request->description),
             'location' => htmlspecialchars($request->location),
             'gallery_id' => intval($request->gallery_id),
-            'owner_id' => intval($request->owner_id),
+            'user_id' => intval($request->user_id),
         ]);
 
         return redirect()->route('gallery.show', $request->gallery_id)->with([

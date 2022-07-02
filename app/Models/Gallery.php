@@ -5,8 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Mews\Purifier\Casts\CleanHtml;
-use Mews\Purifier\Casts\CleanHtmlInput;
-use Mews\Purifier\Casts\CleanHtmlOutput;
+use App\Casts\HtmlEntitiesCast;
 
 class Gallery extends Model
 {
@@ -16,15 +15,41 @@ class Gallery extends Model
         'name',
         'description',
         'cover_image',
-        'owner_id',
+        'user_id',
     ];
 
+    /**
+     * Gallery has many photos
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function photos()
     {
         return $this->hasMany(Photo::class);
     }
 
+    /**
+     * Galleries belong to many tags
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tags()
+    {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * User has many galleries
+     * 
+     * @return @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected $casts = [
-        'description'    => CleanHtmlInput::class, // cleans when setting the value
+        'name'    => HtmlEntitiesCast::class,
+        'description'    => CleanHtml::class,
     ];
 }

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Mews\Purifier\Casts\CleanHtml;
+use App\Casts\HtmlEntitiesCast;
 
 class Photo extends Model
 {
@@ -14,13 +16,18 @@ class Photo extends Model
         'description',
         'location',
         'image',
-        'gallery_id',
-        'owner_id',
+        'gallery_id'
     ];
 
 
-    public function galleries()
+    public function gallery()
     {
         return $this->belongsTo(Gallery::class);
     }
+
+    protected $casts = [
+        'title'          => HtmlEntitiesCast::class,
+        'description'    => CleanHtml::class,
+        'location'       => CleanHtml::class
+    ];
 }
