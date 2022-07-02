@@ -52,7 +52,10 @@
                                     <i class="fa-solid fa-triangle-exclamation text-rose-300"></i>
                                     @endif
                                 </h2>
-                                <p class="text-gray-700">{{ $goal->description }}</p>
+                                <div class="text-gray-700">
+                                    {{-- Mews\Purifier cleans html --}}
+                                    {!! $goal->description !!}
+                                </div>
                             </div>
 
                         </div>

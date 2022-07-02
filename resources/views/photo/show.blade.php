@@ -61,8 +61,8 @@
           </div>
 
           <div class="hidden">
-            <label for="owner_id">Owner Id</label>
-            <input class="hidden" name="owner_id" type="number" value="{{ $photo->owner_id }}" id="owner_id">
+            <label for="user_id">Owner Id</label>
+            <input class="hidden" name="user_id" type="number" value="{{ $photo->user_id }}" id="user_id">
           </div>
 
           <div class="hidden">

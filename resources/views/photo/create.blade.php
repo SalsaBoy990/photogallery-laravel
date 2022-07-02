@@ -65,8 +65,8 @@
           </div>
 
           <div class="hidden">
-            <label for="owner_id">Owner Id</label>
-            <input class="hidden" name="owner_id" type="number" value="{{ Auth::id() }}" id="owner_id">
+            <label for="user_id">User Id</label>
+            <input class="hidden" name="user_id" type="number" value="{{ Auth::id() }}" id="user_id">
           </div>
 
           <div class="hidden">

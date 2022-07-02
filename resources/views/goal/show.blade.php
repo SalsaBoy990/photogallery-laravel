@@ -19,9 +19,10 @@
                         @endif
                     </p>
 
-                    <p class="mb-4 text-base text-gray-700">
-                        {{ $goal->description }}
-                    </p>
+                    <div class="mb-4 text-base text-gray-700">
+                        {{-- Mews\Purifier cleans html --}}
+                        {!! $goal->description !!}
+                    </div>
 
                 </div>
             </div>

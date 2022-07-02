@@ -25,6 +25,12 @@
                 <i class="fas fa-crosshairs mx-2"></i>
                 Bakancslista</a>
         </li>
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
+            <a href="{{ route('tag.index') }}"
+                class="text-nav-item {{ Request::is('*tag*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
+                <i class="fas fa-tags mx-2"></i>
+                Fotók címkéi</a>
+        </li>
         @else
         <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ url('login') }}"

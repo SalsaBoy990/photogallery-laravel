@@ -14,7 +14,7 @@
     @endif
     <h1 class="text-left text-4xl font-bold font-serif">{{ __('Gallery list')}}</h1>
 </div>
-@stop
+@endsection
 
 
 @section('content')
@@ -26,15 +26,22 @@
 
         <div class="w-full rounded">
             <a href="{{ route('gallery.show', $gallery->id) }}">
+
+                @if ($gallery->cover_image === 'placeholder.jpg')
+                <img src="{{ asset('storage/images/placeholder.jpg') }}" alt="{{ $gallery->name }}"
+                    class="rounded outline outline-gray-600 outline-offset-2 outline-1">
+                @else
                 <img src="{{ '/file/' . Auth::id() . '/cover/' . $gallery->cover_image }}" alt="{{ $gallery->name }}"
                     class="rounded outline outline-gray-600 outline-offset-2 outline-1">
+                @endif
+
             </a>
             <figcaption class="pt-3 pb-3 font-bold">{{ $gallery->name }}</figcaption>
-            <p>{{ $gallery->description }}</p>
+            <p>{!! $gallery->description !!}</p>
         </div>
 
         @endforeach
 
     </div>
 </div>
-@stop
+@endsection

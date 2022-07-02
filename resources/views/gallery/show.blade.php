@@ -8,14 +8,22 @@
   <div class="flex justify-center">
     <div class="rounded-lg shadow-lg bg-white w-full flex flex-row">
       <div>
+
+        @if($gallery->cover_image === 'placeholder.jpg')
+        <img src="{{ asset('storage/images/placeholder.jpg') }}" alt="{{ $gallery->name }}"
+          class="rounded-t-lg h-full w-full">
+        @else
         <img src="{{ '/file/' . Auth::id() . '/cover/' . $gallery->cover_image }}" alt="{{ $gallery->name }}"
           class="rounded-t-lg h-full w-full">
+        @endif
+
       </div>
       <div class="p-6">
         <h5 class="text-left text-4xl font-bold font-serif mb-3">{{ $gallery->name }}</h5>
-        <p class="text-gray-700 text-base mb-4">
-          {{ $gallery->description }}
-        </p>
+        <div class="text-gray-700 text-base mb-4">
+          {{-- Mews\Purifier cleans html --}}
+          {!! $gallery->description !!}
+        </div>
         <button type="button"
           class=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Szerkesztés</button>
       </div>
@@ -53,10 +61,11 @@
       @foreach ($photos as $photo)
       <div class="flex flex-wrap w-1/2">
         <div class="w-full p-1 md:p-2">
-          <img class="block object-cover object-fit w-full rounded-lg" src="{{ '/file/' . Auth::id() . '/photo/' . $photo->image }}"
-            alt="{{ $photo->name }}">
+          <img class="block object-cover object-fit w-full rounded-lg"
+            src="{{ '/file/' . Auth::id() . '/photo/' . $photo->image }}" alt="{{ $photo->name }}">
           <figcaption class="pt-3 pb-3 font-bold">{{ $photo->title }}</figcaption>
-          <p>{{ $photo->description }}</p>
+          {{-- Mews\Purifier cleans html, <p> --}}
+          {!! $photo->description !!}
           <small class="text-sm block mt-3 text-gray-500">
             <i class="fas fa-location-dot"></i>
             {{ $photo->location}}

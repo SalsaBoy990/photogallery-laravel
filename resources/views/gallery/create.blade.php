@@ -17,13 +17,13 @@
     <div class="max-w-md">
       <div class="grid grid-cols-1 gap-6">
 
-        <form action="{!! action('App\Http\Controllers\GalleryController@store') !!}" method="POST"
+        <form action="{{ route('gallery.store') }}" method="POST"
           enctype="multipart/form-data" accept-charset="UTF-8">
           @csrf
 
           <div class="block mb-5">
             <label for="name" class="form-label text-gray-700">Név</label>
-            <input type="text" id="name" name="name" va class="form-control mt-1 block w-full
+            <input type="text" id="name" name="name" value="{{ old('name')}}" class="form-control mt-1 block w-full
         rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200
         focus:ring-opacity-50" placeholder="A galéria neve">
 
