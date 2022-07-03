@@ -65,11 +65,6 @@
           </div>
 
           <div class="hidden">
-            <label for="user_id">User Id</label>
-            <input class="hidden" name="user_id" type="number" value="{{ Auth::id() }}" id="user_id">
-          </div>
-
-          <div class="hidden">
             <label for="gallery_id">Gallery Id</label>
             <input class="hidden" name="gallery_id" type="number" value="{{ $gallery->id }}" id="gallery_id">
           </div>

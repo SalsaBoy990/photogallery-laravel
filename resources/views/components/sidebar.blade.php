@@ -1,4 +1,5 @@
-<aside id="sidebar" class="bg-side-nav border-side-nav hidden w-full border-r md:block md:w-1/6 lg:block lg:w-1/6">
+<aside id="sidebar"
+    class="bg-side-nav border-side-nav hidden w-full border-r md:block md:w-1/6 lg:block lg:w-1/6">
 
     <ul class="list-reset flex flex-col">
 
@@ -40,7 +41,6 @@
             </a>
         </li>
 
-
         @if (Route::has('register'))
         <li class="border-light-border h-full w-full border-b py-3 px-2">
             <a href="{{ url('register') }}"
@@ -55,5 +55,18 @@
         @endif
 
     </ul>
-    @include('partials/language_switcher')
+
+
+    @auth
+    <ul class="list-reset flex flex-col mt-8">
+        <li class="border-light-border h-full w-full border-b py-3 px-2">
+            <a href="{{ route('user.show', auth()->id()) }}"
+                class="text-nav-item {{ Request::is('*user*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
+                <i class="fas fa-gear mx-2"></i>
+                Beállítások</a>
+        </li>
+
+    </ul>
+    @endauth
+
 </aside>

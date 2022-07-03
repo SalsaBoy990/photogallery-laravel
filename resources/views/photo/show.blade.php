@@ -28,7 +28,7 @@
     <div class="max-w-md">
       <div class="grid grid-cols-1 gap-6">
 
-        <form action="{!! action('App\Http\Controllers\PhotoController@update', $photo->id) !!}" method="POST"
+        <form action="{{ route('photo.update', $photo->id) }}" method="POST"
           enctype="multipart/form-data" accept-charset="UTF-8">
           @method('PUT')
           @csrf
@@ -58,11 +58,6 @@
             </div>
             @endif
 
-          </div>
-
-          <div class="hidden">
-            <label for="user_id">Owner Id</label>
-            <input class="hidden" name="user_id" type="number" value="{{ $photo->user_id }}" id="user_id">
           </div>
 
           <div class="hidden">

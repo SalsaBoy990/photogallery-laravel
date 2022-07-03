@@ -13,19 +13,29 @@
         <img src="{{ asset('storage/images/placeholder.jpg') }}" alt="{{ $gallery->name }}"
           class="rounded-t-lg h-full w-full">
         @else
-        <img src="{{ '/file/' . Auth::id() . '/cover/' . $gallery->cover_image }}" alt="{{ $gallery->name }}"
-          class="rounded-t-lg h-full w-full">
+        <img src="{{ '/file/' . Auth::id() . '/cover/' . $gallery->cover_image }}"
+          alt="{{ $gallery->name }}" class="rounded-t-lg h-full w-full">
         @endif
 
       </div>
       <div class="p-6">
         <h5 class="text-left text-4xl font-bold font-serif mb-3">{{ $gallery->name }}</h5>
+        @foreach ($gallery->tags as $tag)
+        <a href="{{ route('tag.show', $tag->id)}}"
+          class="text-xs inline-block py-1 px-2.5 leading-none
+                      text-center whitespace-nowrap align-baseline font-bold bg-gray-200 text-gray-700 rounded">{{ $tag->name }}</a>
+        @endforeach
+
         <div class="text-gray-700 text-base mb-4">
           {{-- Mews\Purifier cleans html --}}
           {!! $gallery->description !!}
         </div>
         <button type="button"
           class=" inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Szerkesztés</button>
+
+        <a role="button"
+          href="{{ URL::previous() == URL::current() ? route('gallery.index') : URL::previous() }}"
+          class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Vissza</a>
       </div>
     </div>
   </div>
@@ -49,10 +59,14 @@
         data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
     @endif
+
+    @auth
     <a href="{{ route('photo.create', $gallery->id)}}" role="button"
       class="m-1 md:m-2 inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">
       <i class="fas fa-plus"></i>
       Új kép hozzáadása</a>
+    @endauth
+
   </div>
   <div class="container">
 
@@ -70,8 +84,12 @@
             <i class="fas fa-location-dot"></i>
             {{ $photo->location}}
           </small>
+
+          @auth
           <a role="button" href="{{ route('photo.show', $photo->id)}}"
             class="inline-block px-6 py-2.5 bg-blue-600 text-white font-medium text-xs leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out">Szerkesztés</a>
+          @endauth
+
         </div>
       </div>
       @endforeach

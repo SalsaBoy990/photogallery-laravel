@@ -33,7 +33,7 @@
 
       <!-- Page Heading Starts Here -->
       <header class="bg-nav">
-        <x-navbar :userName="Auth::user()->name" :avatar="'https://avatars.githubusercontent.com/u/24732861?v=4'">
+        <x-navbar :userName="Auth::user()->name ?? ''" :avatar="'https://avatars.githubusercontent.com/u/24732861?v=4'">
         </x-navbar>
       </header>
       <!--/Page Heading -->
