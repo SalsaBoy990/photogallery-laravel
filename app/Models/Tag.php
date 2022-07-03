@@ -20,7 +20,7 @@ class Tag extends Model
     protected $casts = [
         'name'          => HtmlEntitiesCast::class,
         'description'    => CleanHtml::class,
-        //'location'       => CleanHtml::class,
+        //'location'       => HtmlEntitiesCast::class,
     ];
 
     /**

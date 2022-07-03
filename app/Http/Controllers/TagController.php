@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTagRequest;
-use Illuminate\Http\Request;
 use App\Http\Requests\UpdateTagRequest;
+use Illuminate\Http\Request;
 use App\Models\Tag;
 
 
@@ -46,16 +46,13 @@ class TagController extends Controller
             'description' => ['required', 'min:10', 'max:255'],
         ]);
 
-        $name = htmlspecialchars($request->name);
-        $description = htmlspecialchars($request->description);
-
         Tag::create([
-            'name' => $name,
-            'description' => $description,
+            'name' => $request->name,
+            'description' => $request->description,
         ]);
 
         return redirect()->route('tag.index')->with([
-            'success' => '<b class="mr-1">' .  $name . '</b> címke sikeresen létrehozva.',
+            'success' => '<b class="mr-1">' . htmlentities($request->name) . '</b> címke sikeresen létrehozva.',
         ]);
     }
 
@@ -92,23 +89,20 @@ class TagController extends Controller
      * @param  \App\Models\Tag  $tag
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
         $request->validate([
             'name' => ['required', 'min:3'],
             'description' => ['required', 'min:10', 'unique:tags'],
         ]);
 
-        $name = htmlspecialchars($request->name);
-        $description = htmlspecialchars($request->description);
-
         $tag->update([
-            'name' => $name,
-            'description' => $description,
+            'name' => $request->name,
+            'description' => $request->description,
         ]);
 
         return redirect()->route('tag.index')->with([
-            'success' => '<b class="mr-1">' .  $name . '</b> címke sikeresen módosítva.',
+            'success' => '<b class="mr-1">' .  htmlentities($request->name) . '</b> címke sikeresen módosítva.',
         ]);
     }
 
@@ -120,7 +114,7 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
-        $oldName = $tag->name;
+        $oldName = htmlentities($tag->name);
         $tag->deleteOrFail();
         return redirect()->route('tag.index')->with([
             'success' => '<b class="mr-1">' .  $oldName . '</b> címke sikeresen törölve.',

@@ -52,14 +52,14 @@ class GoalController extends Controller
         ]);
 
         Goal::create([
-            'title' => htmlentities($request->title),
-            'description' => htmlentities($request->description),
+            'title' => $request->title,
+            'description' => $request->description,
             'completed' => intval($request->completed)
         ]);
 
         //return $this->index();
         return redirect()->route('goal.index')->with([
-            'success' => '<b class="mr-1">' . $request->title . '</b>' . ' hozzáadva a bakancslistádhoz.'
+            'success' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.'
         ]);
     }
 
@@ -105,13 +105,13 @@ class GoalController extends Controller
         ]);
 
         $goal->update([
-            'title' => htmlentities($request->title),
-            'description' => htmlentities($request->description),
+            'title' => $request->title,
+            'description' => $request->description,
             'completed' => intval($request->completed)
         ]);
 
         return redirect()->route('goal.index')->with([
-            'success' => '<b class="mr-1">' . $request->title . '</b>' . ' sikeresen módosítva.'
+            'success' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' sikeresen módosítva.'
         ]);
     }
 
@@ -123,7 +123,7 @@ class GoalController extends Controller
      */
     public function destroy(Goal $goal)
     {
-        $oldTitle = $goal->title;
+        $oldTitle = htmlentities($goal->title);
         $goal->deleteOrFail();
         return redirect()->route('goal.index')->with([
             'success' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',

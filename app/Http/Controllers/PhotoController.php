@@ -46,7 +46,6 @@ class PhotoController extends Controller
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
             'image' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
-            'user_id' => ['required'],
             'gallery_id' => ['required'],
         ]);
 
@@ -61,11 +60,11 @@ class PhotoController extends Controller
             'location' => htmlspecialchars($request->location),
             'image' => htmlspecialchars($imageName),
             'gallery_id' => intval($request->gallery_id),
-            'user_id' => intval($request->user_id),
+            'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('gallery.show', $request->gallery_id)->with([
-            'success' => 'Hozzáadtad a "' . $request->title . '" nevű képedet.'
+        return redirect()->route('gallery.show', intval($request->gallery_id))->with([
+            'success' => 'Hozzáadtad a "' . htmlentities($request->title) . '" nevű képedet.'
         ]);
     }
 
@@ -111,20 +110,19 @@ class PhotoController extends Controller
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
-            'user_id' => ['required'],
             'gallery_id' => ['required'],
         ]);
 
         $photo->update([
-            'title' => htmlspecialchars($request->title),
-            'description' => htmlspecialchars($request->description),
-            'location' => htmlspecialchars($request->location),
+            'title' => $request->title,
+            'description' => $request->description,
+            'location' => $request->location,
             'gallery_id' => intval($request->gallery_id),
-            'user_id' => intval($request->user_id),
+            'user_id' => auth()->id(),
         ]);
 
-        return redirect()->route('gallery.show', $request->gallery_id)->with([
-            'success' => 'Frissítetted a "' . $request->title . '" nevű képed adatait.'
+        return redirect()->route('gallery.show', intval($request->gallery_id))->with([
+            'success' => 'Frissítetted a "' . htmlentities($request->title) . '" nevű képed adatait.'
         ]);
     }
 

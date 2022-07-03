@@ -4,7 +4,7 @@ namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 
-class HtmlEntitesCast implements CastsAttributes
+class HtmlEntitiesCast implements CastsAttributes
 {
     /**
      * Cast the given value.

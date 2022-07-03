@@ -7,9 +7,14 @@ use App\Models\Photo;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class GalleryController extends Controller
 {
+
+    /*public function __construct() {
+        $this->middleware('auth')->except(['index']);
+    }*/
 
     /**
      * Display a listing of the resource.
@@ -18,7 +23,11 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        $galleries = Gallery::where('user_id', Auth::user()->id)->get();
+        //$galleries = Gallery::where('user_id', Auth::user()->id)->get();
+        // $galleries = Gallery::where('user_id', Auth::user()->id)->paginate(3);
+        $galleries = Gallery::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(3);
+
+        //dd($galleries->first());
         return view('gallery.index')->with([
             'galleries' => $galleries
         ]);
@@ -60,12 +69,12 @@ class GalleryController extends Controller
         Gallery::create([
             'name' => $request->name,
             'description' => $request->description,
-            'user_id' => intval($request->user->id),
+            'user_id' => auth()->id(),
             'cover_image' => htmlentities($coverImageName),
         ]);
 
         return redirect()->route('gallery.index')->with([
-            'success' => 'Létrehoztad a "' . $request->name . '" nevű galériádat.'
+            'success' => 'Létrehoztad a "' . htmlentities($request->name) . '" nevű galériádat.'
         ]);
     }
 
