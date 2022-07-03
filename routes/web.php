@@ -7,6 +7,7 @@ use App\Http\Controllers\FileAccessController;
 use App\Http\Controllers\GoalController;
 use App\Http\Controllers\LocalizationController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,6 +49,10 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'app'],
 
         // Tags used for galleries and photos
         Route::resource('tag', TagController::class);
+
+        Route::put('user/change-password', [UserController::class, 'changePassword'])->name('user.change.password');
+        Route::resource('user', UserController::class);
+
     }
 );
 
