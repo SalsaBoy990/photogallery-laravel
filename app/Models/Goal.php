@@ -25,7 +25,7 @@ class Goal extends Model
     ];
 
     protected $casts = [
-        'title'    => HtmlEntitiesCast::class,
+        'title'          => HtmlEntitiesCast::class,
         'description'    => CleanHtml::class,
     ];
 }

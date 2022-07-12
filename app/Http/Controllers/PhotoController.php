@@ -16,7 +16,7 @@ class PhotoController extends Controller
     public function index()
     {
         $photos = Photo::all();
-        return view('photo.index')->with([
+        return view('app.photo.index')->with([
             'photos' => $photos
         ]);
     }
@@ -28,7 +28,7 @@ class PhotoController extends Controller
      */
     public function create(Gallery $gallery)
     {
-        return view('photo.create')->with([
+        return view('app.photo.create')->with([
             'gallery' => $gallery
         ]);
     }
@@ -78,7 +78,7 @@ class PhotoController extends Controller
     {
         $gallery = Gallery::where('id', intval($photo->gallery_id))->first();
 
-        return view('photo.show')->with([
+        return view('app.photo.show')->with([
             'photo' => $photo,
             'gallery' => $gallery
         ]);
@@ -92,7 +92,7 @@ class PhotoController extends Controller
      */
     public function edit(Photo $photo)
     {
-        return view('photo.edit')->with([
+        return view('app.photo.edit')->with([
             'photo' => $photo,
         ]);
     }

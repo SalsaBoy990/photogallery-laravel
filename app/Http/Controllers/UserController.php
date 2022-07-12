@@ -47,7 +47,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('user.profile');
+        return view('app.user.profile');
     }
 
     /**
@@ -86,14 +86,15 @@ class UserController extends Controller
 
     public function changePassword(Request $request)
     {
+        //dd($request);
         $request->validate([
             'old_password' => 'required',
-            'new_password' => 'required|confirmed',
+            'new_password' => 'nullable|required_with:new_password_confirmation|string|confirmed',
         ]);
 
         # A régi jelszó ellenőrzése
         if (!Hash::check($request->old_password, auth()->user()->password)) {
-            return back()->with("error", "A régi jelszó nem egyezik!");
+            return back()->with('error', 'A régi jelszó nem egyezik!');
         }
 
 
@@ -102,6 +103,8 @@ class UserController extends Controller
             'password' => Hash::make($request->new_password)
         ]);
 
-        return back()->with("success", "A jelszó sikeresen megváltoztatva!");
+        return redirect()->route('user.show', Auth()->user()->id)->with([
+            'success' => 'A jelszó sikeresen megváltoztatva!'
+        ]);
     }
 }

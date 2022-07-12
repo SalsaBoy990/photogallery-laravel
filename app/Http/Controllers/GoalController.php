@@ -20,7 +20,7 @@ class GoalController extends Controller
         $completed = Goal::where('completed', 1)->count();
         $percentage = round($completed / count($goals) * 100);
 
-        return view('goal.index')->with([
+        return view('app.goal.index')->with([
             'goals' => $goals,
             'completed' => $completed,
             'percentage' => $percentage
@@ -34,7 +34,7 @@ class GoalController extends Controller
      */
     public function create()
     {
-        return view('goal.create');
+        return view('app.goal.create');
     }
 
     /**
@@ -58,7 +58,7 @@ class GoalController extends Controller
         ]);
 
         //return $this->index();
-        return redirect()->route('goal.index')->with([
+        return redirect()->route('app.goal.index')->with([
             'success' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.'
         ]);
     }
@@ -71,7 +71,7 @@ class GoalController extends Controller
      */
     public function show(Goal $goal)
     {
-        return view('goal.show')->with([
+        return view('app.goal.show')->with([
             'goal' => $goal,
         ]);
     }
@@ -84,7 +84,7 @@ class GoalController extends Controller
      */
     public function edit(Goal $goal)
     {
-        return view('goal.edit')->with([
+        return view('app.goal.edit')->with([
             'goal' => $goal,
         ]);
     }
@@ -99,7 +99,7 @@ class GoalController extends Controller
     public function update(Request $request, Goal $goal)
     {
         $request->validate([
-            'title' => ['required', 'unique:goals', 'min:10', 'max:255'],
+            'title' => ['required', 'min:10', 'max:255'],
             'description' => ['required', 'min:10', 'max:512'],
             'completed' => ['boolean'],
         ]);
@@ -125,7 +125,7 @@ class GoalController extends Controller
     {
         $oldTitle = htmlentities($goal->title);
         $goal->deleteOrFail();
-        return redirect()->route('goal.index')->with([
+        return redirect()->route('app.goal.index')->with([
             'success' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
         ]);
     }

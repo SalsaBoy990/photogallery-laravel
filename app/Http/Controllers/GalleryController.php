@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Gallery;
 use App\Models\Photo;
+use App\Models\Tag;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class GalleryController extends Controller
 {
@@ -27,10 +29,13 @@ class GalleryController extends Controller
         // $galleries = Gallery::where('user_id', Auth::user()->id)->paginate(3);
         $galleries = Gallery::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(3);
 
-        //dd($galleries->first());
-        return view('gallery.index')->with([
-            'galleries' => $galleries
-        ]);
+        if ($galleries->count() > 0) {
+            return view('app.gallery.index')->with([
+                'galleries' => $galleries
+            ]);
+        } else {
+            return view('app.onboarding');
+        }
     }
 
     /**
@@ -40,7 +45,7 @@ class GalleryController extends Controller
      */
     public function create()
     {
-        return view('gallery.create');
+        return view('app.gallery.create');
     }
 
     /**
@@ -60,7 +65,7 @@ class GalleryController extends Controller
         $coverImage = $request->file('cover_image');
         // TODO: More validation is needed !
         if (!$coverImage) {
-            $coverImageName = 'placeholder.png';
+            $coverImageName = 'placeholder.jpg';
         } else {
             $coverImageName = auth()->id() . '_' . time() . '_' . $coverImage->getClientOriginalName();
             $coverImage->move(storage_path('app/user/' . $request->user->id . '/coverimages'), $coverImageName);
@@ -87,10 +92,15 @@ class GalleryController extends Controller
     public function show(Gallery $gallery)
     {
         $photos = Photo::where('gallery_id', $gallery->id)->get();
+        $allTags = Tag::all();
+        $usedTags = $gallery->tags;
+        $availableTags = $allTags->diff($usedTags);
 
-        return view('gallery.show')->with([
+        return view('app.gallery.show')->with([
             'gallery' => $gallery,
             'photos' => $photos,
+            'availableTags' => $availableTags,
+            'success' => Session::get('success'),
         ]);
     }
 
@@ -102,7 +112,7 @@ class GalleryController extends Controller
      */
     public function edit(Gallery $gallery)
     {
-        return view('gallery.edit')->with([
+        return view('app.gallery.edit')->with([
             'gallery' => $gallery,
         ]);
     }

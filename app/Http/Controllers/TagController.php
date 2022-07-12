@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
 use Illuminate\Http\Request;
 use App\Models\Tag;
+use App\Models\Gallery;
 
 
 class TagController extends Controller
@@ -17,8 +18,9 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::all();
-        return view('tag.index')->with([
+        $tags = Tag::getGalleriesFilteredByTag();
+
+        return view('app.tag.index')->with([
             'tags' => $tags,
         ]);
     }
@@ -30,7 +32,7 @@ class TagController extends Controller
      */
     public function create()
     {
-        return view('tag.create');
+        return view('app.tag.create');
     }
 
     /**
@@ -49,6 +51,7 @@ class TagController extends Controller
         Tag::create([
             'name' => $request->name,
             'description' => $request->description,
+            'user_id' => Auth()->user()->id,
         ]);
 
         return redirect()->route('tag.index')->with([
@@ -64,8 +67,11 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
-        return view('tag.show')->with([
+        $galleries = Tag::getTagWithItsGalleries($tag, 3);
+
+        return view('app.tag.show')->with([
             'tag' => $tag,
+            'galleries' => $galleries,
         ]);
     }
 
@@ -77,7 +83,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        return view('tag.edit')->with([
+        return view('app.tag.edit')->with([
             'tag' => $tag
         ]);
     }
@@ -101,7 +107,7 @@ class TagController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('tag.index')->with([
+        return redirect()->route('app.tag.index')->with([
             'success' => '<b class="mr-1">' .  htmlentities($request->name) . '</b> címke sikeresen módosítva.',
         ]);
     }
@@ -116,7 +122,7 @@ class TagController extends Controller
     {
         $oldName = htmlentities($tag->name);
         $tag->deleteOrFail();
-        return redirect()->route('tag.index')->with([
+        return redirect()->route('app.tag.index')->with([
             'success' => '<b class="mr-1">' .  $oldName . '</b> címke sikeresen törölve.',
         ]);
     }

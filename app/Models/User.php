@@ -40,8 +40,8 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'name' => HtmlEntitiesCast::class,
-        'email' => HtmlEntitiesCast::class,
+        'name'              => HtmlEntitiesCast::class,
+        'email'             => HtmlEntitiesCast::class,
         'email_verified_at' => 'datetime',
     ];
 
@@ -53,5 +53,15 @@ class User extends Authenticatable
     public function galleries()
     {
         return $this->hasMany(Gallery::class);
+    }
+
+    /**
+     * User has many tags
+     * 
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tags()
+    {
+        return $this->hasMany(Tag::class);
     }
 }

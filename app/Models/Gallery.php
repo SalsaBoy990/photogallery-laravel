@@ -49,7 +49,7 @@ class Gallery extends Model
     }
 
     protected $casts = [
-        'name'    => HtmlEntitiesCast::class,
+        'name'           => HtmlEntitiesCast::class,
         'description'    => CleanHtml::class,
     ];
 }
