@@ -4,16 +4,20 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Sidebar extends Component
+class DeleteButton extends Component
 {
+    public string $title;
+    public string $iconName;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $title = '', string $iconName = 'trash-can')
     {
-        //
+        $this->title    = $title;
+        $this->iconName = $iconName;
     }
 
     /**
@@ -23,6 +27,6 @@ class Sidebar extends Component
      */
     public function render()
     {
-        return view('components.app.sidebar');
+        return view('components.delete-button');
     }
 }

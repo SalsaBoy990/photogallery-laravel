@@ -4,16 +4,21 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Sidebar extends Component
+class Card extends Component
 {
+
+    public string $size;
+    public string $height;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $size = "full", string $height = '')
     {
-        //
+        $this->size = $size;
+        $this->height = $height;
     }
 
     /**
@@ -23,6 +28,6 @@ class Sidebar extends Component
      */
     public function render()
     {
-        return view('components.app.sidebar');
+        return view('components.generic.card');
     }
 }

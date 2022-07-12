@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Sidebar extends Component
+class GalleryGrid extends Component
 {
     /**
      * Create a new component instance.
@@ -23,6 +23,6 @@ class Sidebar extends Component
      */
     public function render()
     {
-        return view('components.app.sidebar');
+        return view('components.generic.gallery-grid');
     }
 }

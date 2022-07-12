@@ -4,16 +4,18 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
-class Sidebar extends Component
+class SubmitButton extends Component
 {
+    public string $linkText;
+
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $linkText = '')
     {
-        //
+        $this->linkText = $linkText;
     }
 
     /**
@@ -23,6 +25,6 @@ class Sidebar extends Component
      */
     public function render()
     {
-        return view('components.app.sidebar');
+        return view('components.submit-button');
     }
 }
