@@ -1,4 +1,5 @@
-<aside id="sidebar" class="bg-side-nav border-side-nav md:w-48 hidden w-48 border-r md:block lg:block lg:w-1/6" style="margin-top: 52px;">
+<aside id="sidebar" class="bg-side-nav border-side-nav hidden w-48 border-r md:block md:w-48 lg:block lg:w-1/6"
+    style="margin-top: 52px;">
 
     <ul class="list-reset flex flex-col">
 
@@ -8,7 +9,7 @@
                     class="border-light-border {{ Request::is('*gallery') ? ' bg-white' : '' }} h-full w-full border-b py-3 px-2">
                     <a href="{{ route('gallery.index') }}"
                         class="text-nav-item {{ Request::is('*gallery') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
-                        <i class="fas fa-tachometer-alt  mx-2"></i>
+                        <i class="fas fa-tachometer-alt mx-2"></i>
                         {{ __('Galleries') }}
 
                     </a>
@@ -22,18 +23,18 @@
                     </a>
                 </li>
                 <li
-                    class="border-light-border {{ Request::is('*goal') ? ' bg-white' : '' }} h-full w-full border-b py-3 px-2">
-                    <a href="{{ route('goal.index') }}"
-                        class="text-nav-item {{ Request::is('*goal*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
-                        <i class="fas fa-crosshairs mx-2"></i>
-                        {{ __('Bucket list') }}</a>
-                </li>
-                <li
                     class="border-light-border {{ Request::is('*tag') ? ' bg-white' : '' }} h-full w-full border-b py-3 px-2">
                     <a href="{{ route('tag.index') }}"
                         class="text-nav-item {{ Request::is('*tag*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
                         <i class="fas fa-tags mx-2"></i>
                         {{ __('Gallery tags') }}</a>
+                </li>
+                <li
+                    class="border-light-border {{ Request::is('*goal') ? ' bg-white' : '' }} h-full w-full border-b py-3 px-2">
+                    <a href="{{ route('goal.index') }}"
+                        class="text-nav-item {{ Request::is('*goal*') ? ' font-bold' : '' }} font-sans text-base no-underline hover:text-sky-800">
+                        <i class="fas fa-crosshairs mx-2"></i>
+                        {{ __('Bucket list') }}</a>
                 </li>
                 <li
                     class="border-light-border {{ Request::is('*user*') ? ' bg-white' : '' }} h-full w-full border-b py-3 px-2">

@@ -27,6 +27,6 @@ class DeleteButton extends Component
      */
     public function render()
     {
-        return view('components.delete-button');
+        return view('components.generic.delete-button');
     }
 }

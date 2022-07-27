@@ -6,14 +6,17 @@ use Illuminate\View\Component;
 
 class GalleryGrid extends Component
 {
+
+    public string $galleryId;
+    
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $galleryId = '')
     {
-        //
+        $this->galleryId = $galleryId;
     }
 
     /**

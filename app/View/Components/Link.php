@@ -34,6 +34,6 @@ class Link extends Component
      */
     public function render()
     {
-        return view('components.link');
+        return view('components.generic.link');
     }
 }

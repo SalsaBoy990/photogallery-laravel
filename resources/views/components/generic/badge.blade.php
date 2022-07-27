@@ -7,7 +7,7 @@
         </a>
     @else
         <a href="{{ route('tag.show', $tagId) }}"
-            class="pl-2 pr-6 inline-block whitespace-nowrap rounded bg-gray-200 py-1 text-center align-baseline text-sm font-bold leading-none text-gray-700">
+            class="inline-block whitespace-nowrap rounded bg-gray-200 py-1 pl-2 pr-6 text-center align-baseline text-sm font-bold leading-none text-gray-700">
             {{ $tagName }}
         </a>
         @if ($galleryId !== null)

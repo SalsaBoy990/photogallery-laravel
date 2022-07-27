@@ -1,5 +1,5 @@
-<div class="w-full py-4 dark:bg-gray-800">
-    <div class="alert alert-dismissible fade show mb-3 inline-flex w-full items-center rounded-lg bg-yellow-100 py-5 px-6 text-base text-yellow-700"
+<div class="w-full py-4">
+    <div class="alert {{ 'alert-' . $type }} alert-dismissible fade show mb-3 inline-flex w-full items-center rounded-lg bg-yellow-100 py-5 px-6 text-base text-yellow-700"
         role="alert">
         {!! $message !!}
         <button type="button"
