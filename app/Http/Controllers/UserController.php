@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -47,7 +50,11 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return view('app.user.profile');
+        return view('app.user.profile')->with(
+            [
+                'user' => $user,
+            ]
+        );
     }
 
     /**
@@ -58,7 +65,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return view('app.user.edit')->with([
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -70,7 +79,58 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'max:100'],
+            'short_bio' => ['required', 'max:255'],
+            'avatar_image' => ['nullable', 'mimes:png,jpg,jpeg', 'max:1024', 'dimensions:ratio=1/1'],
+        ]);
+
+        $avatarImage = $request->file('avatar_image');
+
+        if ($avatarImage === null || !$avatarImage->isValid()) {
+            $user->update([
+                'name' => $request->name,
+                'short_bio' => $request->short_bio,
+            ]);
+        } else {
+            $userFolder = 'app/user/' . auth()->id();
+
+            if (!is_dir(storage_path($userFolder))) {
+                mkdir(storage_path($userFolder), 0775, true);
+            }
+
+            $imageFileName = time() . '_' . pathinfo($avatarImage->getClientOriginalName(), PATHINFO_FILENAME) . '.jpg';
+            $avatarImagePath = storage_path($userFolder) . '/' . $imageFileName;
+
+            $imageStoragePath = '/user/' . Auth::user()->id  . '/' . Auth::user()->avatar_image;
+            if (Storage::exists($imageStoragePath)) {
+                Storage::delete($imageStoragePath);
+            }
+
+            $image = Image::make($avatarImage);
+
+            if ($image->width() > 512) {
+                $image->resize(512, 512, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                    ->save($avatarImagePath, 85, 'jpg');
+            } else {
+                $image->save($avatarImagePath, 85, 'jpg');
+            }
+
+            $user->update([
+                'name' => $request->name,
+                'short_bio' => $request->short_bio,
+                'avatar_image' => $imageFileName,
+            ]);
+        }
+
+        return redirect()->route('user.show', Auth::user()->id)->with([
+            'notification' => [
+                'message' => 'Frissítetted a profilodat.',
+                'type'    => 'success'
+            ]
+        ]);
     }
 
     /**
@@ -104,7 +164,10 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('user.show', Auth()->user()->id)->with([
-            'success' => 'A jelszó sikeresen megváltoztatva!'
+            'notification' => [
+                'message' => 'A jelszó sikeresen megváltoztatva!',
+                'type'    => 'success'
+            ]
         ]);
     }
 }

@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Mews\Purifier\Casts\CleanHtml;
-use App\Casts\HtmlEntitiesCast;
+use App\Casts\HtmlSpecialCharsCast;
+use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 
-class Gallery extends Model
+class Gallery extends BaseModel
 {
     use HasFactory;
 
@@ -15,7 +18,13 @@ class Gallery extends Model
         'name',
         'description',
         'cover_image',
+        'thumbnail_image',
         'user_id',
+    ];
+
+    protected $casts = [
+        'name'           => HtmlSpecialCharsCast::class,
+        'description'    => CleanHtml::class,
     ];
 
     /**
@@ -48,8 +57,97 @@ class Gallery extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected $casts = [
-        'name'           => HtmlEntitiesCast::class,
-        'description'    => CleanHtml::class,
-    ];
+    /*public static function saveCoverImage(string $coverImage, string $imagePath, string $thumbnailImagePath)
+    {
+        $image = Image::make($coverImage);
+        $imageWidth = $image->width();
+        $imageHeight = $image->height();
+
+        if ($imageWidth > $imageHeight || $imageHeight > $imageWidth) {
+            // Landscape & portrait will have a width with a maximum of 2500pxs
+            ($imageWidth > 2500) ?
+                $image->resize(2500, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($imagePath, 75, 'jpg')
+                ->resize(700, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($thumbnailImagePath, 80, 'jpg')
+                :
+                $image->save($imagePath, 75, 'jpg')
+                ->resize(700, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($thumbnailImagePath, 80, 'jpg');
+        } else {
+            // Square
+            ($imageWidth > 2500) ?
+                $image->resize(2500, 2500, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($imagePath, 75, 'jpg')
+                ->resize(700, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->save($thumbnailImagePath, 80, 'jpg')
+                :
+                $image->save($imagePath, 75, 'jpg')
+                ->resize(700, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                })
+                ->save($thumbnailImagePath, 80, 'jpg');
+        }
+    }*/
+
+    public static function createFoldersIfNotExist(string $userFolder, string $coverImagesFolder, string $coverImagesYearMonthFolder)
+    {
+        if (!is_dir(storage_path($userFolder))) {
+            mkdir(storage_path($userFolder), 0775, true);
+
+            if (!is_dir(storage_path($coverImagesFolder))) {
+                mkdir(storage_path($coverImagesFolder), 0775, true);
+
+                if (!is_dir(storage_path($coverImagesYearMonthFolder))) {
+                    mkdir(storage_path($coverImagesYearMonthFolder), 0775, true);
+                }
+            }
+        }
+    }
+
+    public static function checkIfCoverImageExists(int $userId, string $image)
+    {
+        $imageStoragePath = '/user/' . $userId . '/coverimages/' . $image;
+        return Storage::exists($imageStoragePath);
+    }
+
+
+    public static function deleteCoverImage(int $userId, string $image)
+    {
+        $imageStoragePath = '/user/' . $userId . '/coverimages/' . $image;
+        if (Storage::exists($imageStoragePath)) {
+            Storage::delete($imageStoragePath);
+        }
+    }
+
+    public static function generateCoverImagePaths(bool $isValid, $coverImage, int $userId, string $coverImagesYearMonthFolder)
+    {
+        if (!$isValid) {
+            $imageFileName = 'placeholder.jpg';
+            $thumbnailImageFileName = 'placeholder.jpg';
+        } else {
+            // with jpg extension (it will be converted to jpg in case of other extensions)
+            $imageFileName = $userId . '_' . time() . '_' . pathinfo($coverImage->getClientOriginalName(), PATHINFO_FILENAME) . '.jpg';
+            $thumbnailImageFileName = $userId . '_' . time() . '_' . pathinfo($coverImage->getClientOriginalName(), PATHINFO_FILENAME) . '_thumbnail.jpg';
+        }
+
+        $imagePath = storage_path($coverImagesYearMonthFolder) . '/' . $imageFileName;
+        $thumbnailImagePath = storage_path($coverImagesYearMonthFolder) . '/' . $thumbnailImageFileName;
+        //$imageFileName->move(storage_path('app/user/' . $request->user->id . '/coverimages/' . $currentDate), $coverImageName);
+
+        return [
+            'imagePath' => $imagePath,
+            'thumbnailImagePath' => $thumbnailImagePath,
+            'imageFileName' => $imageFileName,
+            'thumbnailImageFileName' => $thumbnailImageFileName,
+        ];
+    }
 }

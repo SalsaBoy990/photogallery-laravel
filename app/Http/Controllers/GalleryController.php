@@ -5,10 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Gallery;
 use App\Models\Photo;
 use App\Models\Tag;
-use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Session;
 
 class GalleryController extends Controller
@@ -57,29 +55,49 @@ class GalleryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'max:255', Rule::unique(Gallery::class)],
-            'description' => ['required', 'max:255', Rule::unique(Gallery::class)],
-            'cover_image' => ['nullable', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'name' => ['required', 'max:255'],
+            'description' => ['required', 'max:255'],
+            'cover_image' => ['nullable', 'mimes:png,jpg,jpeg', 'max:5120'],
         ]);
 
         $coverImage = $request->file('cover_image');
-        // TODO: More validation is needed !
-        if (!$coverImage) {
-            $coverImageName = 'placeholder.jpg';
+        $isValid = $coverImage && $request->file('cover_image')->isValid();
+
+        if ($isValid) {
+            $currentDate = date("Ym");
+            $userFolder = 'app/user/' . auth()->id();
+            $coverImagesFolder = $userFolder . '/coverimages';
+            $coverImagesYearMonthFolder = $coverImagesFolder . '/' . $currentDate;
+            
+            $imageSettings = Gallery::generateCoverImagePaths($isValid, $coverImage, auth()->id(), $coverImagesYearMonthFolder);
+            
+            Gallery::createFoldersIfNotExist($userFolder, $coverImagesFolder, $coverImagesYearMonthFolder);
+            Gallery::saveImage($coverImage, $imageSettings['imagePath'], $imageSettings['thumbnailImagePath']);
+            
+            Gallery::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'user_id' => auth()->id(),
+                'cover_image' => $imageSettings['imageFileName'],
+                'thumbnail_image' => $imageSettings['thumbnailImageFileName'],
+            ]);
         } else {
-            $coverImageName = auth()->id() . '_' . time() . '_' . $coverImage->getClientOriginalName();
-            $coverImage->move(storage_path('app/user/' . $request->user->id . '/coverimages'), $coverImageName);
+            $placeholderImageName = 'placeholder.jpg';
+
+            Gallery::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'user_id' => auth()->id(),
+                'cover_image' => $placeholderImageName,
+                'thumbnail_image' => $placeholderImageName,
+            ]);
         }
 
-        Gallery::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'user_id' => auth()->id(),
-            'cover_image' => htmlentities($coverImageName),
-        ]);
-
         return redirect()->route('gallery.index')->with([
-            'success' => 'Létrehoztad a "' . htmlentities($request->name) . '" nevű galériádat.'
+            'notification' => [
+                'message' => 'Létrehoztad a <b>"' . htmlentities($request->name) . '"</b> nevű galériádat.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -92,7 +110,7 @@ class GalleryController extends Controller
     public function show(Gallery $gallery)
     {
         $photos = Photo::where('gallery_id', $gallery->id)->get();
-        $allTags = Tag::all();
+        $allTags = Tag::where('user_id', $gallery->user_id)->get();
         $usedTags = $gallery->tags;
         $availableTags = $allTags->diff($usedTags);
 
@@ -100,7 +118,7 @@ class GalleryController extends Controller
             'gallery' => $gallery,
             'photos' => $photos,
             'availableTags' => $availableTags,
-            'success' => Session::get('success'),
+            'notification' => Session::get('notification'),
         ]);
     }
 
@@ -112,7 +130,11 @@ class GalleryController extends Controller
      */
     public function edit(Gallery $gallery)
     {
+        $allTags = Tag::all();
+        $usedTags = $gallery->tags;
+        $availableTags = $allTags->diff($usedTags);
         return view('app.gallery.edit')->with([
+            'availableTags' => $availableTags,
             'gallery' => $gallery,
         ]);
     }
@@ -126,7 +148,54 @@ class GalleryController extends Controller
      */
     public function update(Request $request, Gallery $gallery)
     {
-        dd($gallery);
+        $request->validate([
+            'name' => ['required', 'max:255'],
+            'description' => ['required', 'max:255'],
+            'cover_image' => ['nullable', 'mimes:png,jpg,jpeg', 'max:5120'],
+        ]);
+
+        $coverImage = $request->file('cover_image');
+
+        if ($coverImage === null) {
+            $gallery->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'user_id' => auth()->id(),
+            ]);
+        } else {
+            $isValid = $coverImage && $request->file('cover_image')->isValid();
+            $currentDate = date("Ym");
+            $userFolder = 'app/user/' . auth()->id();
+            $coverImagesFolder = $userFolder . '/coverimages';
+            $coverImagesYearMonthFolder = $coverImagesFolder . '/' . $currentDate;
+
+            $imageSettings = Gallery::generateCoverImagePaths($isValid, $coverImage, auth()->id(), $coverImagesYearMonthFolder);
+
+            if (Gallery::checkIfCoverImageExists(auth()->id(), $gallery->cover_image)) {
+                Gallery::deleteCoverImage(auth()->id(), $gallery->cover_image);
+            }
+            if (Gallery::checkIfCoverImageExists(auth()->id(), $gallery->thumbnail_image)) {
+                Gallery::deleteCoverImage(auth()->id(), $gallery->thumbnail_image);
+            }
+
+            Gallery::createFoldersIfNotExist($userFolder, $coverImagesFolder, $coverImagesYearMonthFolder);
+            Gallery::saveImage($coverImage, $imageSettings['imagePath'], $imageSettings['thumbnailImagePath']);
+
+            $gallery->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'user_id' => auth()->id(),
+                'cover_image' => $currentDate . '/' . $imageSettings['imageFileName'],
+                'thumbnail_image' => $currentDate . '/' . $imageSettings['thumbnailImageFileName'],
+            ]);
+        }
+
+        return redirect()->route('gallery.show', $gallery->id)->with([
+            'notification' => [
+                'message' => 'Frissítetted a <b>"' . htmlentities($request->name) . '"</b> nevű galériádat.',
+                'type'    => 'success'
+            ]
+        ]);
     }
 
     /**
@@ -137,6 +206,17 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery)
     {
-        dd($gallery);
+        $oldName = htmlentities($gallery->name);
+
+        Gallery::deleteCoverImage(auth()->id(), $gallery->cover_image);
+        Gallery::deleteCoverImage(auth()->id(), $gallery->thumbnail_image);
+
+        $gallery->deleteOrFail();
+        return redirect()->route('gallery.index')->with([
+            'notification' => [
+                'message' => '<b class="mr-1">' .  $oldName . '</b> sikeresen törölve.',
+                'type'    => 'success'
+            ]
+        ]);
     }
 }

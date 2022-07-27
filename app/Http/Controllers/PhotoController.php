@@ -45,26 +45,38 @@ class PhotoController extends Controller
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
-            'image' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
+            'full_image' => ['required', 'mimes:png,jpg,jpeg', 'max:2048'],
             'gallery_id' => ['required'],
         ]);
 
+        $image = $request->file('full_image');
+        $isValid = $image && $image->isValid();
+        $galleryId = intval($request->gallery_id);
 
-        $image = $request->file('image');
-        $imageName = auth()->id() . '_' . time() . '_' .  $image->getClientOriginalName();
-        $image->move(storage_path('app/user/' . $request->user->id . '/photos'), $imageName);
+        if ($isValid) {
+            $userFolder = 'app/user/' . auth()->id();
+            $photosFolder = $userFolder . '/photos';
+            $galleryFolder = $photosFolder . '/' . $galleryId;
+            $imageSettings = Photo::generateImagePaths($image, auth()->id(), $galleryFolder);
 
-        Photo::create([
-            'title' => htmlspecialchars($request->title),
-            'description' => htmlspecialchars($request->description),
-            'location' => htmlspecialchars($request->location),
-            'image' => htmlspecialchars($imageName),
-            'gallery_id' => intval($request->gallery_id),
-            'user_id' => auth()->id(),
-        ]);
+            Photo::createFoldersIfNotExist($userFolder, $photosFolder, $galleryFolder);
+            Photo::saveImage($image, $imageSettings['imagePath'], $imageSettings['thumbnailImagePath']);
 
-        return redirect()->route('gallery.show', intval($request->gallery_id))->with([
-            'success' => 'Hozzáadtad a "' . htmlentities($request->title) . '" nevű képedet.'
+            Photo::create([
+                'title' => $request->title,
+                'description' => $request->description,
+                'location' => $request->location,
+                'full_image' => $imageSettings['imageFileName'],
+                'thumbnail_image' => $imageSettings['thumbnailImageFileName'],
+                'gallery_id' => $galleryId,
+            ]);
+        }
+
+        return redirect()->route('gallery.show', $galleryId)->with([
+            'notification' => [
+                'message' => 'Hozzáadtad a <b>"' . htmlentities($request->title) . '"</b> nevű képedet.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -76,7 +88,7 @@ class PhotoController extends Controller
      */
     public function show(Photo $photo)
     {
-        $gallery = Gallery::where('id', intval($photo->gallery_id))->first();
+        $gallery = Gallery::where('id', intval($photo->gallery_id))->firstOrFail();
 
         return view('app.photo.show')->with([
             'photo' => $photo,
@@ -110,19 +122,53 @@ class PhotoController extends Controller
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
-            'gallery_id' => ['required'],
+            'full_image' => ['mimes:png,jpg,jpeg', 'max:2048'],
         ]);
 
-        $photo->update([
-            'title' => $request->title,
-            'description' => $request->description,
-            'location' => $request->location,
-            'gallery_id' => intval($request->gallery_id),
-            'user_id' => auth()->id(),
-        ]);
+        $image = $request->file('full_image');
+        $galleryId = intval($photo->gallery_id);
 
-        return redirect()->route('gallery.show', intval($request->gallery_id))->with([
-            'success' => 'Frissítetted a "' . htmlentities($request->title) . '" nevű képed adatait.'
+        if ($image === null || !$image->isValid()) {
+            $photo->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'location' => $request->location,
+            ]);
+        } else {
+            $isValid = $image && $image->isValid();
+
+            if ($isValid) {
+                $userFolder = 'app/user/' . auth()->id();
+                $photosFolder = $userFolder . '/photos';
+                $galleryFolder = $photosFolder . '/' . $galleryId;
+                $imageSettings = Photo::generateImagePaths($image, auth()->id(), $galleryFolder);
+
+
+                if (Photo::checkIfImageExists(auth()->id(), $galleryId, $photo->full_image)) {
+                    Photo::deleteImage(auth()->id(), $galleryId, $photo->full_image);
+                }
+                if (Photo::checkIfImageExists(auth()->id(), $galleryId, $photo->thumbnail_image)) {
+                    Photo::deleteImage(auth()->id(), $galleryId, $photo->thumbnail_image);
+                }
+
+                Photo::createFoldersIfNotExist($userFolder, $photosFolder, $galleryFolder);
+                Photo::saveImage($image, $imageSettings['imagePath'], $imageSettings['thumbnailImagePath']);
+
+                $photo->update([
+                    'title' => $request->title,
+                    'description' => $request->description,
+                    'location' => $request->location,
+                    'full_image' => $imageSettings['imageFileName'],
+                    'thumbnail_image' => $imageSettings['thumbnailImageFileName'],
+                ]);
+            }
+        }
+
+        return redirect()->route('gallery.show', $galleryId)->with([
+            'notification' => [
+                'message' => 'Frissítetted a <b>"' . htmlentities($request->title) . '"</b> nevű képed adatait.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -134,6 +180,18 @@ class PhotoController extends Controller
      */
     public function destroy(Photo $photo)
     {
-        dd($photo);
+        $oldTitle = htmlentities($photo->title);
+        $galleryId = intval($photo->gallery_id);
+
+        Photo::deleteImage(auth()->id(), $photo->gallery_id, $photo->full_image);
+        Photo::deleteImage(auth()->id(), $photo->gallery_id, $photo->thumbnail_image);
+
+        $photo->deleteOrFail();
+        return redirect()->route('gallery.show', $galleryId)->with([
+            'notification' => [
+                'message' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+                'type'    => 'success'
+            ]
+        ]);
     }
 }

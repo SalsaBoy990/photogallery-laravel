@@ -18,7 +18,10 @@ class TagController extends Controller
      */
     public function index()
     {
-        $tags = Tag::getGalleriesFilteredByTag();
+        $callback = function ($query) {
+            $query->where('user_id', Auth()->id());
+        };
+        $tags = Tag::whereRelation('user', 'id', Auth()->id())->with(['galleries' => $callback])->get();
 
         return view('app.tag.index')->with([
             'tags' => $tags,
@@ -44,7 +47,7 @@ class TagController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'min:3', 'max:255', 'unique:tags'],
+            'name' => ['required', 'min:3', 'max:255'],
             'description' => ['required', 'min:10', 'max:255'],
         ]);
 
@@ -55,7 +58,10 @@ class TagController extends Controller
         ]);
 
         return redirect()->route('tag.index')->with([
-            'success' => '<b class="mr-1">' . htmlentities($request->name) . '</b> címke sikeresen létrehozva.',
+            'notification' => [
+                'message' => '<b class="mr-1">' . htmlentities($request->name) . '</b> címke sikeresen létrehozva.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -108,7 +114,10 @@ class TagController extends Controller
         ]);
 
         return redirect()->route('app.tag.index')->with([
-            'success' => '<b class="mr-1">' .  htmlentities($request->name) . '</b> címke sikeresen módosítva.',
+            'notification' => [
+                'message' => '<b class="mr-1">' .  htmlentities($request->name) . '</b> címke sikeresen módosítva.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -122,8 +131,11 @@ class TagController extends Controller
     {
         $oldName = htmlentities($tag->name);
         $tag->deleteOrFail();
-        return redirect()->route('app.tag.index')->with([
-            'success' => '<b class="mr-1">' .  $oldName . '</b> címke sikeresen törölve.',
+        return redirect()->route('tag.index')->with([
+            'notification' => [
+                'message' => '<b class="mr-1">' .  $oldName . '</b> címke sikeresen törölve.',
+                'type'    => 'success'
+            ]
         ]);
     }
 }

@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreGoalRequest;
-use App\Http\Requests\UpdateGoalRequest;
 use App\Models\Goal;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GoalController extends Controller
 {
@@ -16,9 +15,15 @@ class GoalController extends Controller
      */
     public function index()
     {
-        $goals = Goal::orderBy('order')->get();
-        $completed = Goal::where('completed', 1)->count();
-        $percentage = round($completed / count($goals) * 100);
+        $goals = Goal::where('user_id', Auth::id())
+            ->orderBy('order')
+            ->get();
+
+        $completed = Goal::where('user_id', Auth::id())
+            ->where('completed', 1)
+            ->count();
+
+        $percentage = count($goals) ? round($completed / count($goals) * 100) : null;
 
         return view('app.goal.index')->with([
             'goals' => $goals,
@@ -47,19 +52,23 @@ class GoalController extends Controller
     {
         $request->validate([
             'title' => ['required', 'unique:goals', 'min:10', 'max:255'],
-            'description' => ['required', 'min:10', 'max:512'],
+            'description' => ['required', 'min:10', 'max:255'],
             'completed' => ['boolean'],
         ]);
 
         Goal::create([
+            'user_id' => auth()->id(),
             'title' => $request->title,
             'description' => $request->description,
-            'completed' => intval($request->completed)
+            'completed' => intval($request->completed),
         ]);
 
         //return $this->index();
-        return redirect()->route('app.goal.index')->with([
-            'success' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.'
+        return redirect()->route('goal.index')->with([
+            'notification' => [
+                'message' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -100,7 +109,7 @@ class GoalController extends Controller
     {
         $request->validate([
             'title' => ['required', 'min:10', 'max:255'],
-            'description' => ['required', 'min:10', 'max:512'],
+            'description' => ['required', 'min:10', 'max:255'],
             'completed' => ['boolean'],
         ]);
 
@@ -111,7 +120,10 @@ class GoalController extends Controller
         ]);
 
         return redirect()->route('goal.index')->with([
-            'success' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' sikeresen módosítva.'
+            'notification' => [
+                'message' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' sikeresen módosítva.',
+                'type'    => 'success'
+            ]
         ]);
     }
 
@@ -125,8 +137,11 @@ class GoalController extends Controller
     {
         $oldTitle = htmlentities($goal->title);
         $goal->deleteOrFail();
-        return redirect()->route('app.goal.index')->with([
-            'success' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+        return redirect()->route('goal.index')->with([
+            'notification' => [
+                'message' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+                'type'    => 'success'
+            ]
         ]);
     }
 }
