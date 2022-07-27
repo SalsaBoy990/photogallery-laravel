@@ -2,8 +2,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind variants;
 
 @import './photogallery/base';
+
+@import '~lightgallery/css/lightgallery-bundle.css';
 
 .main-nav {
     @apply flex items-center justify-between flex-wrap bg-grey-darkest p-4 inset-0;
@@ -119,5 +122,12 @@ h1 {
   .h-px-320 {
     height: 320px;
   }
+}
+
+.form-control[type=file]:not(:disabled):not([readonly]) {
+    cursor: pointer;
+}
+.form-control[type=file] {
+    overflow: hidden;
 }
 

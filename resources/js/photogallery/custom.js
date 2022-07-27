@@ -53,3 +53,19 @@ if (document.querySelector(".modal-wrapper")) {
         window.toggleModal("remove", btn);
     });
 }
+
+const photoGalleryContainer = document.querySelector("#lightgallery");
+if (photoGalleryContainer) {
+    const photoGalleryInstance = lightGallery(photoGalleryContainer, {
+        plugins: [window.lgZoom, window.lgThumbnail],
+    });
+
+    const openGalleryButton = document.querySelector(
+        "#open-light-gallery-button"
+    );
+    if (openGalleryButton) {
+        openGalleryButton.addEventListener("click", function () {
+            photoGalleryInstance.openGallery(0);
+        });
+    }
+}

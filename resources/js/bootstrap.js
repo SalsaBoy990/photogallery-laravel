@@ -29,3 +29,17 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+// Image viewer / gallery
+import lightGallery from "lightgallery";
+window.lightGallery = lightGallery;
+
+// Plugins for the image gallery
+import lgThumbnail from "lightgallery/plugins/thumbnail";
+window.lgThumbnail = lgThumbnail;
+import lgZoom from "lightgallery/plugins/zoom";
+window.lgZoom = lgZoom;
+
+import Alpine from "alpinejs";
+window.Alpine = Alpine;
+Alpine.start();
