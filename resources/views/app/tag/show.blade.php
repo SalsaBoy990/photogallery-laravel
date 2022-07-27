@@ -25,9 +25,8 @@
 
     <x-card :size="'full'">
         <h2 class="mb-6 border-b border-b-gray-200 text-left font-serif text-2xl font-bold">
-            {{ __('Galleries belonging to ') }}"{{ $tag->name }}"<small
-                class="ml-2 font-sans text-base font-normal">({{ $galleries->total() }}
-                db)</small>
+            {{ __('Galleries belonging to: ') }}"{{ $tag->name }}"<small
+                class="ml-2 font-sans text-base font-normal">({{ $galleries->total() }})</small>
         </h2>
 
         <x-gallery-grid>

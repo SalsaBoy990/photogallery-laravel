@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('title')
-    @if ($msg = Session::get('success'))
-        <x-success-alert :message="$msg"></x-success-alert>
+    @if ($notification = Session::get('notification'))
+        <x-notification :message="$notification['message']" :type="$notification['type']"></x-notification>
     @endif
 @endsection
 
@@ -12,13 +12,13 @@
 
         <h1 class="mb-3 border-b border-b-gray-200 pb-3 text-left font-serif text-4xl font-bold">
             {{ __('All tags') }}
-            <span class="text-base font-normal text-gray-700">({{ count($tags) }} db)</span>
+            <span class="text-base font-normal text-gray-700">({{ count($tags) }})</span>
         </h1>
 
         <div class="container mx-auto space-y-2 lg:space-y-0">
 
             <div class="block pb-5">
-                <x-link :route="'tag.create'" :linkText="__('New Tag')" :iconName="'plus'"></x-link>
+                <x-link :route="route('tag.create')" :linkText="__('New tag')" :iconName="'plus'"></x-link>
             </div>
 
             <div class="flex justify-center">
@@ -30,7 +30,7 @@
                                     <h2 class="mb-2 mr-2 text-xl font-bold text-gray-900">
                                         {{ $tag->name }}
                                     </h2>
-                                    <div class="text-sm italic">({{ $tag->galleries->count() }} galéria)
+                                    <div class="text-sm italic">({{ $tag->galleries->count() . ' ' . __('gallery') }})
                                     </div>
                                 </div>
 
@@ -38,11 +38,11 @@
                                     <form action="{{ route('tag.destroy', $tag->id) }}" method="POST">
                                         @method('DELETE')
                                         @csrf
-                                        <x-delete-button :title="__('Delete tag')" :iconName="'trash-can'">
+                                        <x-delete-button :title="__('Delete')" :iconName="'trash-can'">
                                         </x-delete-button>
                                     </form>
 
-                                    <x-link :route="route('tag.edit', $tag->id)" :title="__('Edit tag')" :iconName="'pencil'" :linkType="'icon'">
+                                    <x-link :route="route('tag.edit', $tag->id)" :title="__('Edit')" :iconName="'pencil'" :linkType="'icon'">
                                     </x-link>
                                     <x-link :route="route('tag.show', $tag->id)" :title="__('Show details')" :iconName="'eye'" :linkType="'icon'">
                                     </x-link>

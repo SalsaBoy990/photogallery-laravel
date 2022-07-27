@@ -4,8 +4,8 @@
 @endphp
 
 @section('title')
-    @if ($msg = Session::get('success'))
-        <x-success-alert :message="$msg"></x-success-alert>
+    @if ($notification = Session::get('notification'))
+        <x-notification :message="$notification['message']" :type="$notification['type']"></x-notification>
     @endif
 @endsection
 
@@ -16,18 +16,20 @@
         <div class="flex flex-row items-center justify-between border-b border-b-gray-200">
 
             <h1 class="mb-3 text-left font-serif text-4xl font-bold">
-                Bakancslista
+                {{ __('Bucket list') }}
             </h1>
 
-            <div>
-                <span class="text-sm font-normal text-gray-700">Teljesítve:
-                    {{ $completed }}/{{ count($goals) }}</span>
-                </span>
-                <div class="h-4 w-40 rounded-full bg-gray-200">
-                    <div class="rounded-l-full bg-green-600 p-0.5 text-center text-xs font-medium leading-none text-green-100"
-                        style="width: {{ $percentage }}%"> {{ $percentage }}%</div>
+            @if (count($goals))
+                <div>
+                    <span class="text-sm font-normal text-gray-700">{{ __('Completed:') }}
+                        {{ $completed }}/{{ count($goals) }}</span>
+                    </span>
+                    <div class="h-4 w-40 rounded-full bg-gray-200">
+                        <div class="rounded-l-full bg-green-600 p-0.5 text-center text-xs font-medium leading-none text-green-100"
+                            style="width: {{ $percentage }}%"> {{ $percentage }}%</div>
+                    </div>
                 </div>
-            </div>
+            @endif
 
         </div>
 
@@ -58,12 +60,12 @@
                                         @method('DELETE')
                                         @csrf
 
-                                        <x-delete-button :title="__('Delete goal')">
+                                        <x-delete-button :title="__('Delete')">
                                         </x-delete-button>
 
                                     </form>
 
-                                    <x-link :route="route('goal.edit', $goal->id)" :title="__('Edit goal')" :iconName="'pencil'" :linkType="'icon'">
+                                    <x-link :route="route('goal.edit', $goal->id)" :title="__('Edit')" :iconName="'pencil'" :linkType="'icon'">
                                     </x-link>
                                     <x-link :route="route('goal.show', $goal->id)" :title="__('Show details')" :iconName="'eye'" :linkType="'icon'">
                                     </x-link>

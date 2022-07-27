@@ -10,7 +10,7 @@
             </h1>
 
             <div class="w-full rounded text-center">
-                <x-link :route="'gallery.create'" :iconName="'plus'" :linkText="__('Create a gallery')"></x-link>
+                <x-link :route="route('gallery.create')" :iconName="'plus'" :linkText="__('Create a gallery')"></x-link>
             </div>
         </x-card>
     @endsection

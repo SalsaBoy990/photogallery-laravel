@@ -3,7 +3,7 @@
 @section('title')
 @php
 
-$pageTitle = __('Create tag');
+$pageTitle = __('Create a tag');
 $indexPage = __('Tags for galleries');
 
 @endphp
@@ -24,7 +24,7 @@ $indexPage = __('Tags for galleries');
                 <div class="mb-5 mt-2 block">
                     <h1
                         class="border-b border-b-gray-200 pb-3 text-left font-serif text-3xl font-bold">
-                        {{ __('Create tag') }}
+                        {{ __('Create a tag') }}
                     </h1>
                 </div>
 
@@ -48,7 +48,7 @@ $indexPage = __('Tags for galleries');
                     <textarea
                         class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} m-0 mt-1 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none"
                         id="description" name="description" rows="5"
-                        placeholder="{{ __('min. 10, max. 512 characters') }}"
+                        placeholder="{{ __('min. 10, max. 255 characters') }}"
                         max="512">{{ old('description') }}</textarea>
 
                     @if ($errors->has('description'))

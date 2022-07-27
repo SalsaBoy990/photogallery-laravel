@@ -32,7 +32,7 @@
         <div class="flex min-h-screen flex-col">
 
             <!-- Page Heading Starts Here -->
-            <header class="bg-nav fixed top-0 left-0 right-0">
+            <header class="bg-nav fixed top-0 left-0 right-0 z-50">
                 <x-navbar :userName="Auth::user()->name ?? ''">
                 </x-navbar>
             </header>

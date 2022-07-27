@@ -1,11 +1,11 @@
 @extends('layouts.app')
 
 @section('title')
-    <div class="w-full p-4 dark:bg-gray-800">
-        @if ($msg = Session::get('success'))
-            <x-success-alert :message="$msg"></x-success-alert>
+    <div class="w-full pt-0 pr-4 pl-4 pb-4">
+        @if ($notification = Session::get('notification'))
+        <x-notification :message="$notification['message']" :type="$notification['type']"></x-notification>
         @endif
-        <h1 class="text-left font-serif text-4xl font-bold">{{ __('Settings') }}</h1>
+        <h1 class="text-left font-serif text-4xl font-bold pt-2">{{ __('Settings') }}</h1>
     </div>
 @endsection
 
@@ -14,11 +14,25 @@
     <div
         class="grid gap-3 gap-y-6 space-y-2 sm:grid sm:gap-6 sm:gap-y-6 md:grid md:grid-cols-2 md:gap-6 md:gap-y-6 md:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:gap-y-6 lg:space-y-0">
 
-        <div class="mb-10 w-full bg-white p-4 shadow dark:bg-gray-800 sm:rounded-sm">
+        <div class="mb-10 w-full bg-white p-4 shadow sm:rounded-sm">
             <div class="container mx-auto">
-                <h2 class="text-2xl font-bold">{{ Auth::user()->name }}</h2>
-                <small class="text-base text-gray-500">{{ Auth::user()->email }}</small>
-                <p class="py-3 text-gray-700">{{ Auth::user()->short_bio }}</p>
+
+                @if ($user->avatar_image)
+                    <img src="{{ '/file/' . $user->id . '/' . $user->avatar_image }}" alt="{{ $user->name }}"
+                        class="h-16 w-16 rounded-full">
+                @elseif ($user->sex === 'male')
+                    <img class="mb-2 h-16 w-16 rounded-full" src="{{ asset('storage/images/avatar-male.png') }}"
+                        alt="{{ $user->name }}">
+                @else
+                    <img class="mb-2 h-16 w-16 rounded-full" src="{{ asset('storage/images/avatar-female.png') }}"
+                        alt="{{ $user->name }}">
+                @endif
+
+                <h2 class="text-2xl font-bold">{{ $user->name }}</h2>
+                <small class="text-base text-gray-500">{{ $user->email }}</small>
+                <p class="py-3 text-gray-700">{{ $user->short_bio }}</p>
+
+                <x-link :route="route('user.edit', $user->id)" :linkText="__('Edit')"></x-link>
             </div>
         </div>
 
@@ -26,8 +40,8 @@
             <div class="container mx-auto">
                 <h2 class="mb-3 text-xl font-bold">{{ __('Change password') }}</h2>
 
-                <form action="{{ route('user.change.password') }}" method="POST" enctype="application/x-www-form-urlencoded"
-                    accept-charset="UTF-8">
+                <form action="{{ route('user.change.password') }}" method="POST"
+                    enctype="application/x-www-form-urlencoded" accept-charset="UTF-8">
                     @method('PUT')
                     @csrf
 
@@ -61,7 +75,8 @@
                     <div class="mb-5 block">
                         <label for="new_password_confirmation"
                             class="form-label text-gray-700">{{ __('New password again') }}</label>
-                        <input type="password" id="new_password_confirmation" name="new_password_confirmation" value=""
+                        <input type="password" id="new_password_confirmation" name="new_password_confirmation"
+                            value=""
                             class="form-control {{ $errors->has('new_password_confirmation') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
                             placeholder="">
 

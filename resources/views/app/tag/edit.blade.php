@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    <x-breadcrumb :indexPage="__('Edit Tag')" :pageTitle="$tag->name" :indexPageRoute="'tag.index'">
+    <x-breadcrumb :indexPage="__('Edit tag')" :pageTitle="$tag->name" :indexPageRoute="'tag.index'">
     </x-breadcrumb>
 @endsection
 
@@ -17,7 +17,7 @@
 
                     <div class="mb-5 mt-2 block">
                         <h1 class="border-b border-b-gray-200 pb-3 text-left font-serif text-3xl font-bold">
-                            {{ $tag->name . __(' módosítása') }}
+                            {{ __("Update: ") . $tag->name }}
                         </h1>
                     </div>
 
