@@ -1,3 +1,14 @@
+#Header add Access-Control-Allow-Origin: "*"
+#Header add Access-Control-Allow-Methods: "GET,POST,OPTIONS,DELETE,PUT"
+#Header add Access-Control-Allow-Headers: "Content-Type"
+
+#<Limit GET POST PUT OPTIONS>
+#    Require all granted
+#</Limit>
+#<LimitExcept GET POST PUT OPTIONS>
+#    Require all denied
+#</LimitExcept>
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
