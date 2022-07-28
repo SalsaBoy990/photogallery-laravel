@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
-/public/storage
+!/public/storage
+!/public/storage/images/placeholder.jpg
 /storage/*.key
 /vendor
 .env
