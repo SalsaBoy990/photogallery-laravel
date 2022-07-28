@@ -57,59 +57,16 @@ class Gallery extends BaseModel
         return $this->belongsTo(User::class);
     }
 
-    /*public static function saveCoverImage(string $coverImage, string $imagePath, string $thumbnailImagePath)
-    {
-        $image = Image::make($coverImage);
-        $imageWidth = $image->width();
-        $imageHeight = $image->height();
-
-        if ($imageWidth > $imageHeight || $imageHeight > $imageWidth) {
-            // Landscape & portrait will have a width with a maximum of 2500pxs
-            ($imageWidth > 2500) ?
-                $image->resize(2500, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save($imagePath, 75, 'jpg')
-                ->resize(700, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($thumbnailImagePath, 80, 'jpg')
-                :
-                $image->save($imagePath, 75, 'jpg')
-                ->resize(700, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save($thumbnailImagePath, 80, 'jpg');
-        } else {
-            // Square
-            ($imageWidth > 2500) ?
-                $image->resize(2500, 2500, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save($imagePath, 75, 'jpg')
-                ->resize(700, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->save($thumbnailImagePath, 80, 'jpg')
-                :
-                $image->save($imagePath, 75, 'jpg')
-                ->resize(700, null, function ($constraint) {
-                    $constraint->aspectRatio();
-                })
-                ->save($thumbnailImagePath, 80, 'jpg');
-        }
-    }*/
-
     public static function createFoldersIfNotExist(string $userFolder, string $coverImagesFolder, string $coverImagesYearMonthFolder)
     {
         if (!is_dir(storage_path($userFolder))) {
             mkdir(storage_path($userFolder), 0775, true);
-
-            if (!is_dir(storage_path($coverImagesFolder))) {
-                mkdir(storage_path($coverImagesFolder), 0775, true);
-
-                if (!is_dir(storage_path($coverImagesYearMonthFolder))) {
-                    mkdir(storage_path($coverImagesYearMonthFolder), 0775, true);
-                }
-            }
+        }
+        if (!is_dir(storage_path($coverImagesFolder))) {
+            mkdir(storage_path($coverImagesFolder), 0775, true);
+        }
+        if (!is_dir(storage_path($coverImagesYearMonthFolder))) {
+            mkdir(storage_path($coverImagesYearMonthFolder), 0775, true);
         }
     }
 

@@ -3,9 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Mews\Purifier\Casts\CleanHtml;
 use App\Casts\HtmlSpecialCharsCast;
-use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 
 class Photo extends BaseModel

@@ -128,7 +128,7 @@ class PhotoController extends Controller
         $image = $request->file('full_image');
         $galleryId = intval($photo->gallery_id);
 
-        if ($image === null || !$image->isValid()) {
+        if ($image === null) {
             $photo->update([
                 'title' => $request->title,
                 'description' => $request->description,

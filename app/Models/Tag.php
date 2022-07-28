@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Mews\Purifier\Casts\CleanHtml;
-use App\Casts\HtmlEntitiesCast;
 use App\Models\BaseModel;
 use App\Casts\HtmlSpecialCharsCast;
 

@@ -130,7 +130,7 @@ class GalleryController extends Controller
      */
     public function edit(Gallery $gallery)
     {
-        $allTags = Tag::all();
+        $allTags = Tag::where('user_id', $gallery->user_id)->get();
         $usedTags = $gallery->tags;
         $availableTags = $allTags->diff($usedTags);
         return view('app.gallery.edit')->with([
