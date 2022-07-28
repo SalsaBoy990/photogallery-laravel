@@ -1,8 +1,10 @@
 /node_modules
 /public/hot
-!/public/storage
-!/public/storage/images/placeholder.jpg
+/public/build
+/public/storage
 /storage/*.key
+/public/css
+/public/js
 /vendor
 .env
 .env.backup
