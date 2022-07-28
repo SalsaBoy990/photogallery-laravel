@@ -14,3 +14,20 @@ body {
 .onboarding-card-height {
     height: calc(100vh - 320px);
 }
+
+.alert-warning {
+    background-color: #fef9c3;
+    color: #b45309;
+}
+.alert-danger {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+.alert-success {
+    background-color: #dcfce7;
+    color: #15803d;
+}
+.alert-info {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
