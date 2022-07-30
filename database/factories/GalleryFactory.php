@@ -19,7 +19,8 @@ class GalleryFactory extends Factory
         return [
             'name' => $this->faker->realText(10),
             'description' => $this->faker->realText(),
-            'cover_image' => 'placeholder.jpg'
+            'cover_image' => 'placeholder.jpg',
+            'thumbnail_image' => 'placeholder.jpg',
         ];
     }
 }

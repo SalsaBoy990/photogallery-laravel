@@ -24,7 +24,7 @@ class UserSeeder extends Seeder
                 Gallery::factory(rand(8, 10))->create([
                     'user_id' => $user->id
                 ])
-                ->each(function ($gallery) {
+                    ->each(function ($gallery) {
                         $tags = Tag::all();
                         $tagIds = [];
                         foreach ($tags as $tag) {

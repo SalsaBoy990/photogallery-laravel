@@ -8,13 +8,10 @@ use App\Models\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Gate;
 
 class GalleryController extends Controller
 {
-
-    /*public function __construct() {
-        $this->middleware('auth')->except(['index']);
-    }*/
 
     /**
      * Display a listing of the resource.
@@ -23,8 +20,8 @@ class GalleryController extends Controller
      */
     public function index()
     {
-        //$galleries = Gallery::where('user_id', Auth::user()->id)->get();
-        // $galleries = Gallery::where('user_id', Auth::user()->id)->paginate(3);
+        $this->authorize('viewAny', Gallery::class);
+
         $galleries = Gallery::where('user_id', Auth::user()->id)->orderBy('created_at', 'DESC')->paginate(3);
 
         if ($galleries->count() > 0) {
@@ -43,6 +40,8 @@ class GalleryController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Gallery::class);
+
         return view('app.gallery.create');
     }
 
@@ -54,6 +53,8 @@ class GalleryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Gallery::class);
+
         $request->validate([
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
@@ -109,6 +110,8 @@ class GalleryController extends Controller
      */
     public function show(Gallery $gallery)
     {
+        abort_unless(Gate::allows('view', $gallery), 403);
+
         $photos = Photo::where('gallery_id', $gallery->id)->get();
         $allTags = Tag::where('user_id', $gallery->user_id)->get();
         $usedTags = $gallery->tags;
@@ -130,6 +133,8 @@ class GalleryController extends Controller
      */
     public function edit(Gallery $gallery)
     {
+        abort_unless(Gate::allows('update', $gallery), 403);
+
         $allTags = Tag::where('user_id', $gallery->user_id)->get();
         $usedTags = $gallery->tags;
         $availableTags = $allTags->diff($usedTags);
@@ -148,6 +153,8 @@ class GalleryController extends Controller
      */
     public function update(Request $request, Gallery $gallery)
     {
+        abort_unless(Gate::allows('update', $gallery), 403);
+
         $request->validate([
             'name' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
@@ -206,6 +213,8 @@ class GalleryController extends Controller
      */
     public function destroy(Gallery $gallery)
     {
+        abort_unless(Gate::allows('delete', $gallery), 403);
+
         $oldName = htmlentities($gallery->name);
 
         Gallery::deleteCoverImage(auth()->id(), $gallery->cover_image);

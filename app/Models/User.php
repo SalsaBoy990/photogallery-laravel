@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Casts\HtmlSpecialCharsCast;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
         'avatar_image',
         'short_bio',
     ];
@@ -46,6 +48,45 @@ class User extends Authenticatable
         'email'             => HtmlSpecialCharsCast::class,
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Users' roles
+     * 
+     * @var array
+     */
+    public const ROLES = [
+        1 => 'admin',
+        2 => 'customer'
+    ];
+
+    /**
+     * Accessor for the user's role.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function role(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => self::ROLES[$value]
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCustomer(): bool
+    {
+        return $this->role === 'customer';
+    }
+
 
     /**
      * User has many galleries

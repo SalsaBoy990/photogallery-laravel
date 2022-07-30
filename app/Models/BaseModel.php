@@ -22,7 +22,14 @@ class BaseModel extends Model
         };
     }
 
-    public static function saveImage(string $inputImage, string $imagePath, string $thumbnailImagePath)
+    /**
+     * @param string $inputImage
+     * @param string $imagePath
+     * @param string $thumbnailImagePath
+     * 
+     * @return void
+     */
+    public static function saveImage(string $inputImage, string $imagePath, string $thumbnailImagePath): void
     {
         $image = Image::make($inputImage);
         $imageWidth = $image->width();
@@ -63,7 +70,15 @@ class BaseModel extends Model
         }
     }
 
-    public static function generateCoverImagePaths(bool $isValid, $coverImage, int $userId, string $coverImagesYearMonthFolder)
+    /**
+     * @param bool $isValid
+     * @param mixed $coverImage
+     * @param int $userId
+     * @param string $coverImagesYearMonthFolder
+     * 
+     * @return array
+     */
+    public static function generateCoverImagePaths(bool $isValid, $coverImage, int $userId, string $coverImagesYearMonthFolder): array
     {
         if (!$isValid) {
             $imageFileName = 'placeholder.jpg';

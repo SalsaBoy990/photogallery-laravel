@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTagRequest;
 use App\Http\Requests\UpdateTagRequest;
 use Illuminate\Http\Request;
 use App\Models\Tag;
-use App\Models\Gallery;
+use Illuminate\Support\Facades\Gate;
 
 
 class TagController extends Controller
@@ -18,6 +17,8 @@ class TagController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Tag::class);
+
         $callback = function ($query) {
             $query->where('user_id', Auth()->id());
         };
@@ -35,6 +36,8 @@ class TagController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Tag::class);
+
         return view('app.tag.create');
     }
 
@@ -46,6 +49,8 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Tag::class);
+
         $request->validate([
             'name' => ['required', 'min:3', 'max:255'],
             'description' => ['required', 'min:10', 'max:255'],
@@ -73,6 +78,8 @@ class TagController extends Controller
      */
     public function show(Tag $tag)
     {
+        abort_unless(Gate::allows('view', $tag), 403);
+
         $galleries = Tag::getTagWithItsGalleries($tag, 3);
 
         return view('app.tag.show')->with([
@@ -89,6 +96,8 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
+        abort_unless(Gate::allows('update', $tag), 403);
+
         return view('app.tag.edit')->with([
             'tag' => $tag
         ]);
@@ -103,6 +112,8 @@ class TagController extends Controller
      */
     public function update(UpdateTagRequest $request, Tag $tag)
     {
+        abort_unless(Gate::allows('update', $tag), 403);
+
         $request->validate([
             'name' => ['required', 'min:3'],
             'description' => ['required', 'min:10', 'unique:tags'],
@@ -129,6 +140,8 @@ class TagController extends Controller
      */
     public function destroy(Tag $tag)
     {
+        abort_unless(Gate::allows('delete', $tag), 403);
+
         $oldName = htmlentities($tag->name);
         $tag->deleteOrFail();
         return redirect()->route('tag.index')->with([

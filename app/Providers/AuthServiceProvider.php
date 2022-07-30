@@ -25,6 +25,8 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::define('connect_tag_to_gallery', function ($user, $gallery) {
+            return $user->id === $gallery->user_id || auth()->user()->role === 'admin';
+        });
     }
 }

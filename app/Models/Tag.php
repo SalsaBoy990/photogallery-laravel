@@ -35,7 +35,7 @@ class Tag extends BaseModel
     /**
      * Galleries belong to a specific tag
      * 
-     * @return @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function fiteredGalleries()
     {
@@ -45,7 +45,7 @@ class Tag extends BaseModel
     /**
      * User has many tags
      * 
-     * @return @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {

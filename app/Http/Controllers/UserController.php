@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Gate;
 
 class UserController extends Controller
 {
@@ -18,7 +19,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $this->authorize('viewAny', User::class);
+
+        $user = Auth::user();
+        abort_unless(Gate::allows('viewAny', $user), 403);
     }
 
     /**
@@ -28,7 +32,10 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', User::class);
+
+        $user = Auth::user();
+        abort_unless(Gate::allows('create', $user), 403);
     }
 
     /**
@@ -39,7 +46,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->authorize('create', User::class);
+
+        $user = Auth::user();
+        abort_unless(Gate::allows('create', $user), 403);
     }
 
     /**
@@ -50,6 +60,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        abort_unless(Gate::allows('view', $user), 403);
+
         return view('app.user.profile')->with(
             [
                 'user' => $user,
@@ -65,6 +77,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        abort_unless(Gate::allows('update', $user), 403);
+
         return view('app.user.edit')->with([
             'user' => $user,
         ]);
@@ -79,6 +93,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        abort_unless(Gate::allows('update', $user), 403);
+
         $request->validate([
             'name' => ['required', 'max:100'],
             'short_bio' => ['required', 'max:255'],
@@ -141,12 +157,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        abort_unless(Gate::allows('delete', $user), 403);
     }
 
     public function changePassword(Request $request)
     {
-        //dd($request);
+        abort_unless(Gate::allows('update', auth()->user()), 403);
+
         $request->validate([
             'old_password' => 'required',
             'new_password' => 'nullable|required_with:new_password_confirmation|string|confirmed',
@@ -156,7 +173,6 @@ class UserController extends Controller
         if (!Hash::check($request->old_password, auth()->user()->password)) {
             return back()->with('error', 'A régi jelszó nem egyezik!');
         }
-
 
         #Update the new Password
         User::whereId(auth()->user()->id)->update([

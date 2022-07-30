@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Goal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class GoalController extends Controller
 {
@@ -15,6 +16,8 @@ class GoalController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Goal::class);
+
         $goals = Goal::where('user_id', Auth::id())
             ->orderBy('order')
             ->get();
@@ -39,6 +42,8 @@ class GoalController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Goal::class);
+
         return view('app.goal.create');
     }
 
@@ -50,6 +55,8 @@ class GoalController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Goal::class);
+
         $request->validate([
             'title' => ['required', 'unique:goals', 'min:10', 'max:255'],
             'description' => ['required', 'min:10', 'max:255'],
@@ -63,7 +70,6 @@ class GoalController extends Controller
             'completed' => intval($request->completed),
         ]);
 
-        //return $this->index();
         return redirect()->route('goal.index')->with([
             'notification' => [
                 'message' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.',
@@ -80,6 +86,8 @@ class GoalController extends Controller
      */
     public function show(Goal $goal)
     {
+        abort_unless(Gate::allows('view', $goal), 403);
+
         return view('app.goal.show')->with([
             'goal' => $goal,
         ]);
@@ -93,6 +101,8 @@ class GoalController extends Controller
      */
     public function edit(Goal $goal)
     {
+        abort_unless(Gate::allows('update', $goal), 403);
+
         return view('app.goal.edit')->with([
             'goal' => $goal,
         ]);
@@ -107,6 +117,8 @@ class GoalController extends Controller
      */
     public function update(Request $request, Goal $goal)
     {
+        abort_unless(Gate::allows('update', $goal), 403);
+
         $request->validate([
             'title' => ['required', 'min:10', 'max:255'],
             'description' => ['required', 'min:10', 'max:255'],
@@ -135,6 +147,8 @@ class GoalController extends Controller
      */
     public function destroy(Goal $goal)
     {
+        abort_unless(Gate::allows('delete', $goal), 403);
+
         $oldTitle = htmlentities($goal->title);
         $goal->deleteOrFail();
         return redirect()->route('goal.index')->with([

@@ -15,7 +15,7 @@
             $avatarFemale = asset('storage/images/avatar-female.png');
         @endphp
 
-        @if (Auth::user()->avatar_image)
+        @if (isset(Auth::user()->avatar_image))
             <img onclick="profileToggle()" class="inline-block h-8 w-8 cursor-pointer rounded-full"
                 src="{{ '/file/' . Auth::id() . '/' . Auth::user()->avatar_image }}" alt="{{ $userName }}">
         @else

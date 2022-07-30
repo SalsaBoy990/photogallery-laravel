@@ -20,7 +20,7 @@
                     @auth
                         <a href="{{ route('gallery.show', $gallery->id) }}">
 
-                            @if ($gallery->thumbnail_image === 'placeholder.jpg')
+                            @if (!$gallery->thumbnail_image || $gallery->thumbnail_image === 'placeholder.jpg')
                                 <img src="{{ asset('storage/images/placeholder.jpg') }}" alt="{{ $gallery->name }}"
                                     class="rounded outline outline-1 outline-offset-2 outline-gray-600">
                             @else

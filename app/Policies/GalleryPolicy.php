@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Goal;
+use App\Models\Gallery;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class GoalPolicy
+class GalleryPolicy
 {
     use HandlesAuthorization;
 
@@ -18,19 +18,19 @@ class GoalPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->isCustomer();
+        return $user->role == 'customer';
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Goal  $goal
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function view(User $user, Goal $goal)
+    public function view(User $user, Gallery $gallery)
     {
-        return $user->id === $goal->user_id;
+        return $user->id === $gallery->user_id;
     }
 
     /**
@@ -48,46 +48,46 @@ class GoalPolicy
      * Determine whether the user can update the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Goal  $goal
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function update(User $user, Goal $goal)
+    public function update(User $user, Gallery $gallery)
     {
-        return $user->id === $goal->user_id;
+        return $user->id === $gallery->user_id;
     }
 
     /**
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Goal  $goal
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Goal $goal)
+    public function delete(User $user, Gallery $gallery)
     {
-        return $user->id === $goal->user_id;
+        return $user->id === $gallery->user_id;
     }
 
     /**
      * Determine whether the user can restore the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Goal  $goal
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function restore(User $user, Goal $goal)
+    public function restore(User $user, Gallery $gallery)
     {
-        
+        //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Goal  $goal
+     * @param  \App\Models\Gallery  $gallery
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function forceDelete(User $user, Goal $goal)
+    public function forceDelete(User $user, Gallery $gallery)
     {
         //
     }

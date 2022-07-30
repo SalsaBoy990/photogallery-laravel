@@ -31,7 +31,14 @@ class Photo extends BaseModel
         return $this->belongsTo(Gallery::class);
     }
 
-    public static function createFoldersIfNotExist(string $userFolder, string $photosFolder, string $galleryFolder)
+    /**
+     * @param string $userFolder
+     * @param string $photosFolder
+     * @param string $galleryFolder
+     * 
+     * @return void
+     */
+    public static function createFoldersIfNotExist(string $userFolder, string $photosFolder, string $galleryFolder): void
     {
         if (!is_dir(storage_path($userFolder))) {
             mkdir(storage_path($userFolder), 0775, true);
@@ -46,14 +53,28 @@ class Photo extends BaseModel
         }
     }
 
-    public static function checkIfImageExists(int $userId, int $galleryId, string $image)
+    /**
+     * @param int $userId
+     * @param int $galleryId
+     * @param string $image
+     * 
+     * @return bool
+     */
+    public static function checkIfImageExists(int $userId, int $galleryId, string $image): bool
     {
         $imageStoragePath = '/user/' . $userId . '/photos/' . $galleryId . '/' . $image;
         return Storage::exists($imageStoragePath);
     }
 
 
-    public static function deleteImage(int $userId, int $galleryId, string $image)
+    /**
+     * @param int $userId
+     * @param int $galleryId
+     * @param string $image
+     * 
+     * @return void
+     */
+    public static function deleteImage(int $userId, int $galleryId, string $image): void
     {
         $imageStoragePath = '/user/' . $userId . '/photos/' . $galleryId . '/' . $image;
         if (Storage::exists($imageStoragePath)) {
@@ -61,7 +82,14 @@ class Photo extends BaseModel
         }
     }
 
-    public static function generateImagePaths($image, int $userId, string $galleryFolder)
+    /**
+     * @param mixed $image
+     * @param int $userId
+     * @param string $galleryFolder
+     * 
+     * @return array
+     */
+    public static function generateImagePaths($image, int $userId, string $galleryFolder): array
     {
         // with jpg extension (it will be converted to jpg in case of other extensions)
         $imageFileName = $userId . '_' . time() . '_' . pathinfo($image->getClientOriginalName(), PATHINFO_FILENAME) . '.jpg';

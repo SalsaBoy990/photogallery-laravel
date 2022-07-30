@@ -50,14 +50,21 @@ class Gallery extends BaseModel
     /**
      * User has many galleries
      * 
-     * @return @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public static function createFoldersIfNotExist(string $userFolder, string $coverImagesFolder, string $coverImagesYearMonthFolder)
+    /**
+     * @param string $userFolder
+     * @param string $coverImagesFolder
+     * @param string $coverImagesYearMonthFolder
+     * 
+     * @return void
+     */
+    public static function createFoldersIfNotExist(string $userFolder, string $coverImagesFolder, string $coverImagesYearMonthFolder): void
     {
         if (!is_dir(storage_path($userFolder))) {
             mkdir(storage_path($userFolder), 0775, true);
@@ -70,14 +77,25 @@ class Gallery extends BaseModel
         }
     }
 
-    public static function checkIfCoverImageExists(int $userId, string $image)
+    /**
+     * @param int $userId
+     * @param string $image
+     * 
+     * @return bool
+     */
+    public static function checkIfCoverImageExists(int $userId, string $image): bool
     {
         $imageStoragePath = '/user/' . $userId . '/coverimages/' . $image;
         return Storage::exists($imageStoragePath);
     }
 
-
-    public static function deleteCoverImage(int $userId, string $image)
+    /**
+     * @param int $userId
+     * @param string $image
+     * 
+     * @return void
+     */
+    public static function deleteCoverImage(int $userId, string $image): void
     {
         $imageStoragePath = '/user/' . $userId . '/coverimages/' . $image;
         if (Storage::exists($imageStoragePath)) {
@@ -85,7 +103,15 @@ class Gallery extends BaseModel
         }
     }
 
-    public static function generateCoverImagePaths(bool $isValid, $coverImage, int $userId, string $coverImagesYearMonthFolder)
+    /**
+     * @param bool $isValid
+     * @param mixed $coverImage
+     * @param int $userId
+     * @param string $coverImagesYearMonthFolder
+     * 
+     * @return array
+     */
+    public static function generateCoverImagePaths(bool $isValid, $coverImage, int $userId, string $coverImagesYearMonthFolder): array
     {
         if (!$isValid) {
             $imageFileName = 'placeholder.jpg';

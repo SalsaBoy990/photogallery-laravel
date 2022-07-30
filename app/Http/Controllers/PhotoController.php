@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Gallery;
 use App\Models\Photo;
+use Illuminate\Support\Facades\Gate;
 
 class PhotoController extends Controller
 {
@@ -15,6 +16,8 @@ class PhotoController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Photo::class);
+
         $photos = Photo::all();
         return view('app.photo.index')->with([
             'photos' => $photos
@@ -28,6 +31,8 @@ class PhotoController extends Controller
      */
     public function create(Gallery $gallery)
     {
+        $this->authorize('create', Photo::class);
+
         return view('app.photo.create')->with([
             'gallery' => $gallery
         ]);
@@ -41,6 +46,8 @@ class PhotoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Photo::class);
+
         $request->validate([
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
@@ -63,6 +70,7 @@ class PhotoController extends Controller
             Photo::saveImage($image, $imageSettings['imagePath'], $imageSettings['thumbnailImagePath']);
 
             Photo::create([
+                'user_id' => auth()->id(),
                 'title' => $request->title,
                 'description' => $request->description,
                 'location' => $request->location,
@@ -88,6 +96,8 @@ class PhotoController extends Controller
      */
     public function show(Photo $photo)
     {
+        abort_unless(Gate::allows('view', $photo), 403);
+
         $gallery = Gallery::where('id', intval($photo->gallery_id))->firstOrFail();
 
         return view('app.photo.show')->with([
@@ -104,6 +114,8 @@ class PhotoController extends Controller
      */
     public function edit(Photo $photo)
     {
+        abort_unless(Gate::allows('update', $photo), 403);
+
         return view('app.photo.edit')->with([
             'photo' => $photo,
         ]);
@@ -118,6 +130,8 @@ class PhotoController extends Controller
      */
     public function update(Request $request, Photo $photo)
     {
+        abort_unless(Gate::allows('update', $photo), 403);
+
         $request->validate([
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
@@ -180,6 +194,8 @@ class PhotoController extends Controller
      */
     public function destroy(Photo $photo)
     {
+        abort_unless(Gate::allows('delete', $photo), 403);
+
         $oldTitle = htmlentities($photo->title);
         $galleryId = intval($photo->gallery_id);
 

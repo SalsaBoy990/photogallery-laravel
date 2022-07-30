@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GalleryController;
 use App\Http\Controllers\PhotoController;
@@ -70,4 +71,6 @@ Route::get( '/file/{user}/photo/{gallery}/{file}', [FileAccessController::class,
 
 /* Get language, set language in session */
 Route::get('lang/{locale}', [LocalizationController::class, 'index'])->name('lang.index');
+
+Route::get('/admin', [AdminController::class, 'index'])->middleware(['admin', 'auth'])->name('admin.index');
 
