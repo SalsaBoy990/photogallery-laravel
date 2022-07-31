@@ -56,7 +56,11 @@
                                 </h2>
 
                                 <div class="flex h-8 gap-2" role="group">
-                                    <form action="{{ route('goal.destroy', $goal->id) }}" method="POST">
+                                    @php
+                                        $confirmMsg = __('Are you sure you want to delete :name?', ['name' => $goal->title]); 
+                                    @endphp
+                                    <form action="{{ route('goal.destroy', $goal->id) }}" method="POST"
+                                        onSubmit="{{ 'return confirm("' . $confirmMsg . '");' }}">
                                         @method('DELETE')
                                         @csrf
 

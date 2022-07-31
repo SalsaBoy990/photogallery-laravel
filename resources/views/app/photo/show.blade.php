@@ -24,8 +24,8 @@
 
                     <div class="mb-5 block">
                         <label for="title" class="form-label text-gray-700">{{ __('Photo title') }}</label>
-                        <input type="text" id="title" name="title" value="{{ $photo->title }}"
-                            class="form-control {{ $errors->has('title') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                        <input type="text" id="title" name="title" value="{{ $photo->title ?? old('title') }}"
+                            class="form-control {{ $errors->has('title') ? ' border-rose-400' : '' }} mt-1 input"
                             placeholder="{{ __('Photo title') }}">
 
                         @if ($errors->has('title'))
@@ -37,9 +37,10 @@
                     </div>
                     <div class="mb-5 block">
                         <label for="description" class="form-label text-gray-700">{{ __('Photo description') }}</label>
-                        <input type="text" id="description" name="description" value="{{ $photo->description }}"
-                            class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
-                            placeholder="{{ __('Photo description') }}">
+                        <textarea
+                            class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} m-0 mt-1 textarea"
+                            id="description" name="description" rows="5" placeholder="{{ __('Photo description') }}"
+                            max="255">{{ $photo->description ?? old('description') }}</textarea>
 
                         @if ($errors->has('description'))
                             <div class="alert mt-2 text-sm text-rose-500">
@@ -51,8 +52,8 @@
 
                     <div class="mb-5 block">
                         <label for="location" class="form-label text-gray-700">{{ __('Location') }}</label>
-                        <input type="text" id="location" name="location" value="{{ $photo->location }}"
-                            class="form-control {{ $errors->has('location') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                        <input type="text" id="location" name="location" value="{{ $photo->location ?? old('location') }}"
+                            class="form-control {{ $errors->has('location') ? ' border-rose-400' : '' }} mt-1 input"
                             placeholder="{{ __('Photo location') }}">
 
                         @if ($errors->has('location'))
@@ -73,7 +74,7 @@
                                 class="form-label mb-2 inline-block text-gray-700">{{ __('Change photo') }}
                                 <span class="sr-only">{{ __('Change photo') }}</span>
                                 <input
-                                    class="form-control {{ $errors->has('description') ? ' border-rose-400 ' : '' }} m0 m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out file:rounded file:border-gray-300 file:bg-white file:text-base file:text-gray-700 hover:file:cursor-pointer hover:file:bg-gray-300 focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none focus:file:cursor-pointer"
+                                    class="form-control {{ $errors->has('description') ? ' border-rose-400 ' : '' }} m0 m-0 file-input"
                                     type="file" id="full_image" name="full_image">
                             </label>
                         </div>
@@ -88,7 +89,7 @@
                     <div class="block">
                         <div class="flex flex-row gap-x-2">
                             <x-submit-button :linkText="__('Update')"></x-submit-button>
-                            <x-link :route="route('gallery.show', $photo->gallery_id)" :linkText="__('Cancel')"></x-link>
+                            <x-link :route="route('gallery.show', $photo->gallery_id)" :linkText="__('Cancel')" :linkType="'secondary'"></x-link>
                         </div>
                     </div>
                 </form>

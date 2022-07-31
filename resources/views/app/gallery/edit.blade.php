@@ -27,7 +27,7 @@
                         <div class="mb-5 block">
                             <label for="name" class="form-label text-gray-700">{{ __('Name') }}</label>
                             <input type="text" id="name" name="name" value="{{ $gallery->name ?? old('name') }}"
-                                class="form-control {{ $errors->has('name') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                                class="form-control {{ $errors->has('name') ? ' border-rose-400' : '' }} input mt-1"
                                 placeholder="{{ __('Gallery name') }}">
 
                             @if ($errors->has('name'))
@@ -39,10 +39,8 @@
                         </div>
                         <div class="mb-5 block">
                             <label for="description" class="form-label text-gray-700">{{ __('Description') }}</label>
-                            <input type="text" id="description" name="description"
-                                value="{{ $gallery->description ?? old('description') }}"
-                                class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
-                                placeholder="{{ __('Short description') }}">
+                            <textarea class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} textarea m-0 mt-1"
+                                id="description" name="description" rows="5" placeholder="{{ __('Short description') }}" max="255">{{ $gallery->description ?? old('description') }}</textarea>
 
                             @if ($errors->has('description'))
                                 <div class="alert mt-2 text-sm text-rose-500">
@@ -67,7 +65,7 @@
                                     class="form-label mb-2 inline-block text-gray-700">{{ __('Change photo') }}
                                     <span class="sr-only">{{ __('Change photo') }}</span>
                                     <input
-                                        class="form-control {{ $errors->has('description') ? ' border-rose-400 ' : '' }} m0 m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out file:rounded file:border-gray-300 file:bg-white file:text-base file:text-gray-700 hover:file:cursor-pointer hover:file:bg-gray-900 focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none focus:file:cursor-pointer"
+                                        class="form-control {{ $errors->has('cover_image') ? ' border-rose-400 ' : '' }} m0 m-0 file-input"
                                         type="file" id="cover_image" name="cover_image">
                                 </label>
                             </div>
@@ -83,7 +81,7 @@
                         <div class="block">
                             <div class="flex flex-row gap-x-2">
                                 <x-submit-button :linkText="__('Update')"></x-submit-button>
-                                <x-link :route="route('gallery.show', $gallery->id)" :linkText="__('Back')"></x-link>
+                                <x-link :route="route('gallery.show', $gallery->id)" :linkText="__('Back')" :linkType="'secondary'"></x-link>
                             </div>
                         </div>
                     </form>

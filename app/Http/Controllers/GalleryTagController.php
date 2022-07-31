@@ -19,7 +19,7 @@ class GalleryTagController extends Controller
 
         return back()->with([
             'notification' => [
-                'message' => '<b class="mr-1">"' . htmlentities($tag->name)  . '"</b> címke hozzáadva a galériához.',
+                'message' => __('The tag <b class="mr-1 ml-1">":name"</b> successfully added to the gallery.', ['name' => htmlentities($tag->name)]),
                 'type'    => 'success',
             ]
         ]);
@@ -35,7 +35,7 @@ class GalleryTagController extends Controller
 
         return back()->with([
             'notification' => [
-                'message' => '<b class="mr-1">"' . htmlentities($tag->name)  . '"</b> címke eltávolítva.',
+                'message' => __('The tag <b class="mr-1 ml-1">":name"</b> removed from the gallery.', ['name' => htmlentities($tag->name)]),
                 'type'    => 'success',
             ]
 

@@ -96,7 +96,7 @@ class GalleryController extends Controller
 
         return redirect()->route('gallery.index')->with([
             'notification' => [
-                'message' => 'Létrehoztad a <b>"' . htmlentities($request->name) . '"</b> nevű galériádat.',
+                'message' => __('You have created your gallery named <b class="mr-1 ml-1">":name"</b>.', ['name' => htmlentities($request->name)]),
                 'type'    => 'success'
             ]
         ]);
@@ -199,7 +199,7 @@ class GalleryController extends Controller
 
         return redirect()->route('gallery.show', $gallery->id)->with([
             'notification' => [
-                'message' => 'Frissítetted a <b>"' . htmlentities($request->name) . '"</b> nevű galériádat.',
+                'message' => __('You have updated your <b class="mr-1 ml-1">":name"</b> gallery.', ['name' => htmlentities($request->name)]),
                 'type'    => 'success'
             ]
         ]);
@@ -223,7 +223,7 @@ class GalleryController extends Controller
         $gallery->deleteOrFail();
         return redirect()->route('gallery.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' .  $oldName . '</b> sikeresen törölve.',
+                'message' => __('<b class="mr-1">":name"</b> gallery successfully deleted.', ['name' => $oldName]),
                 'type'    => 'success'
             ]
         ]);

@@ -47,7 +47,11 @@
                     <h5 class="mb-3 text-left font-serif text-4xl font-bold">{{ $gallery->name }}
                     </h5>
                     <div class="flex flex-row gap-x-2">
-                        <form class="mt-3" action="{{ route('gallery.destroy', $gallery->id) }}" method="POST">
+                        @php
+                            $confirmMsg = __('Are you sure you want to delete :name?', ['name' => $gallery->name]);
+                        @endphp
+                        <form class="mt-3" action="{{ route('gallery.destroy', $gallery->id) }}" method="POST"
+                            onSubmit="{{ 'return confirm("' . $confirmMsg . '");' }}">
                             @method('DELETE')
                             @csrf
 
@@ -108,7 +112,7 @@
                         <a href="{{ route('photo.show', $photo->id) }}">
                             <img class="object-fit block h-56 w-full rounded-lg object-cover sm:h-72"
                                 src="{{ '/file/' . Auth::id() . '/photo/' . $photo->gallery_id . '/' . $photo->full_image }}"
-                                alt="{{ $photo->name }}">
+                                alt="{{ $photo->title }}">
                         </a>
 
                         <figcaption class="pt-3 pb-3 font-bold">{{ $photo->title }}</figcaption>
@@ -121,8 +125,11 @@
                         </div>
 
                         <div class="mt-3 flex flex-row gap-x-2">
-
-                            <form class="mt-3" action="{{ route('photo.destroy', $photo->id) }}" method="POST">
+                            @php
+                                $confirmMsg = __('Are you sure you want to delete :name?', ['name' => $photo->title]);
+                            @endphp
+                            <form class="mt-3" action="{{ route('photo.destroy', $photo->id) }}" method="POST"
+                                onSubmit="{{ 'return confirm("' . $confirmMsg . '");' }}">
                                 @method('DELETE')
                                 @csrf
 

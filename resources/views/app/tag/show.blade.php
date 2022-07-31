@@ -17,8 +17,8 @@
                     {!! $tag->description !!}
                 </div>
 
-                <x-submit-button :linkText="__('Modify')"></x-submit-button>
-                <x-link :route="URL::previous() == URL::current() ? route('tag.index') : URL::previous()" :linkText="__('Cancel')"></x-link>
+                <x-link :route="route('tag.edit', $tag->id)" :linkText="__('Modify')"></x-link>
+                <x-link :route="route('tag.index')" :linkText="__('Cancel')" :linkType="'secondary'"></x-link>
             </div>
         </div>
     </x-card>

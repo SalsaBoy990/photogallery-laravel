@@ -17,7 +17,7 @@ $indexPage = __('Tags for galleries');
 
     <div class="container mx-auto space-y-2">
         <div class="grid grid-cols-1 gap-6">
-            <form action="{{ route('tag.store') }}" method="POST" enctype="multipart/form-data"
+            <form action="{{ route('tag.store') }}" method="POST" enctype="application/x-www-form-urlencoded"
                 accept-charset="UTF-8">
                 @csrf
 
@@ -49,7 +49,7 @@ $indexPage = __('Tags for galleries');
                         class="form-control {{ $errors->has('description') ? ' border-rose-400' : '' }} m-0 mt-1 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none"
                         id="description" name="description" rows="5"
                         placeholder="{{ __('min. 10, max. 255 characters') }}"
-                        max="512">{{ old('description') }}</textarea>
+                        max="255">{{ old('description') }}</textarea>
 
                     @if ($errors->has('description'))
                     <div class="alert mt-2 text-sm text-rose-500">
@@ -62,7 +62,7 @@ $indexPage = __('Tags for galleries');
                 <div class="block">
                     <div class="flex flex-row gap-x-2">
                         <x-submit-button :linkText="__('Add new')"></x-submit-button>
-                        <x-link :route="route('tag.index')" :linkText="__('Cancel')"></x-link>
+                        <x-link :route="route('tag.index')" :linkText="__('Cancel')" :linkType="'secondary'"></x-link>
                     </div>
                 </div>
             </form>

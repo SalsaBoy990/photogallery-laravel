@@ -82,7 +82,7 @@ class PhotoController extends Controller
 
         return redirect()->route('gallery.show', $galleryId)->with([
             'notification' => [
-                'message' => 'Hozzáadtad a <b>"' . htmlentities($request->title) . '"</b> nevű képedet.',
+                'message' => __('Your photo <b class="mr-1 ml-1">":name"</b> uploaded and saved.', ['name' => htmlentities($request->title)]),
                 'type'    => 'success'
             ]
         ]);
@@ -136,7 +136,7 @@ class PhotoController extends Controller
             'title' => ['required', 'max:255'],
             'description' => ['required', 'max:255'],
             'location' => ['required', 'max:255'],
-            'full_image' => ['mimes:png,jpg,jpeg', 'max:2048'],
+            'full_image' => ['mimes:png,jpg,jpeg', 'max:5120'],
         ]);
 
         $image = $request->file('full_image');
@@ -180,7 +180,7 @@ class PhotoController extends Controller
 
         return redirect()->route('gallery.show', $galleryId)->with([
             'notification' => [
-                'message' => 'Frissítetted a <b>"' . htmlentities($request->title) . '"</b> nevű képed adatait.',
+                'message' => __('Your photo <b class="mr-1 ml-1">":name"</b> successfully modified.', ['name' => htmlentities($request->title)]),
                 'type'    => 'success'
             ]
         ]);
@@ -205,7 +205,7 @@ class PhotoController extends Controller
         $photo->deleteOrFail();
         return redirect()->route('gallery.show', $galleryId)->with([
             'notification' => [
-                'message' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+                'message' => __('<b class="mr-1">":name"</b> successfully deleted.', ['name' => $oldTitle]),
                 'type'    => 'success'
             ]
         ]);

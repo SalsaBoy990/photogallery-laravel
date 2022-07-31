@@ -3,9 +3,9 @@
 @section('title')
     <div class="w-full pt-0 pr-4 pl-4 pb-4">
         @if ($notification = Session::get('notification'))
-        <x-notification :message="$notification['message']" :type="$notification['type']"></x-notification>
+            <x-notification :message="$notification['message']" :type="$notification['type']"></x-notification>
         @endif
-        <h1 class="text-left font-serif text-4xl font-bold pt-2">{{ __('Settings') }}</h1>
+        <h1 class="pt-2 text-left font-serif text-4xl font-bold">{{ __('Settings') }}</h1>
     </div>
 @endsection
 
@@ -48,7 +48,7 @@
                     <div class="mb-5 block">
                         <label for="old_password" class="form-label text-gray-700">{{ __('Old password') }}</label>
                         <input type="password" id="old_password" name="old_password" value="{{ old('old_password') }}"
-                            class="form-control {{ $errors->has('old_password') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                            class="form-control {{ $errors->has('old_password') ? ' border-rose-400' : '' }} input mt-1"
                             placeholder="">
 
                         @if ($errors->has('old_password'))
@@ -62,7 +62,7 @@
                     <div class="mb-5 block">
                         <label for="new_password" class="form-label text-gray-700">{{ __('New password') }}</label>
                         <input type="password" id="new_password" name="new_password" value="{{ old('new_password') }}"
-                            class="form-control {{ $errors->has('new_password') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                            class="form-control {{ $errors->has('new_password') ? ' border-rose-400' : '' }} input mt-1"
                             placeholder="">
 
                         @if ($errors->has('new_password'))
@@ -77,7 +77,7 @@
                             class="form-label text-gray-700">{{ __('New password again') }}</label>
                         <input type="password" id="new_password_confirmation" name="new_password_confirmation"
                             value=""
-                            class="form-control {{ $errors->has('new_password_confirmation') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                            class="form-control {{ $errors->has('new_password_confirmation') ? ' border-rose-400' : '' }} input mt-1"
                             placeholder="">
 
                         @if ($errors->has('new_password_confirmation'))

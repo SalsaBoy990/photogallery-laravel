@@ -25,14 +25,14 @@ class FileAccessController extends Controller
 
     public function serveImage(Request $request, string $type)
     {
-        if (Auth::user() && Auth::id() === intval($request->user)) {
+        if (Auth::user() && Auth::id() === intval($request->user) || Auth::user()->role === 'admin') {
             // Here we don't use the Storage facade that assumes the storage/app folder
             // So filename should be a relative path inside storage to your file like 'app/userfiles/report1253.pdf'
             $filePath = '';
 
             switch ($type) {
                 case 'avatar':
-                    $filePath = storage_path('app/user/' . Auth::id() . '/' . $request->file);
+                    $filePath = storage_path('app/user/' . $request->user . '/' . $request->file);
                     break;
 
                 case 'photo':

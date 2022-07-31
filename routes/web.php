@@ -32,7 +32,8 @@ Route::get('/app', [GalleryController::class, 'index'])->middleware(['auth'])->n
 require __DIR__ . '/auth.php';
 
 
-Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'app'],
+Route::group(
+    ['middleware' => ['web', 'auth'], 'prefix' => 'app'],
     function () {
         /* Galleries */
         Route::get('gallery', [GalleryController::class, 'index'])->name('gallery.index');
@@ -67,10 +68,16 @@ Route::group(['middleware' => ['web', 'auth'], 'prefix' => 'app'],
 /* Get images from protected storage path (only owner can access them if logged in) */
 Route::get('/file/{user}/{file}', [FileAccessController::class, 'serveUserAvatar'])->name('file.serve.avatar');
 Route::get('/file/{user}/cover/{folder}/{file}', [FileAccessController::class, 'serveCoverImage'])->name('file.serve.cover');
-Route::get( '/file/{user}/photo/{gallery}/{file}', [FileAccessController::class, 'servePhoto'])->name('file.serve.photo');
+Route::get('/file/{user}/photo/{gallery}/{file}', [FileAccessController::class, 'servePhoto'])->name('file.serve.photo');
 
 /* Get language, set language in session */
 Route::get('lang/{locale}', [LocalizationController::class, 'index'])->name('lang.index');
 
-Route::get('/admin', [AdminController::class, 'index'])->middleware(['admin', 'auth'])->name('admin.index');
 
+Route::group(
+    ['middleware' => ['web', 'auth', 'admin']],
+    function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        Route::get('/admin/create', [UserController::class, 'create'])->name('admin.create');
+    }
+);

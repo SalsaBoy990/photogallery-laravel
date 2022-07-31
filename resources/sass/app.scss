@@ -4,9 +4,9 @@
 @tailwind utilities;
 @tailwind variants;
 
-@import './photogallery/base';
+@import "./photogallery/base";
 
-@import '~lightgallery/css/lightgallery-bundle.css';
+@import "~lightgallery/css/lightgallery-bundle.css";
 
 .main-nav {
     @apply flex items-center justify-between flex-wrap bg-grey-darkest p-4 inset-0;
@@ -119,15 +119,31 @@ h1 {
 }
 
 @layer utilities {
-  .h-px-320 {
-    height: 320px;
-  }
+    .h-px-320 {
+        height: 320px;
+    }
 }
 
-.form-control[type=file]:not(:disabled):not([readonly]) {
+.form-control[type="file"]:not(:disabled):not([readonly]) {
     cursor: pointer;
 }
-.form-control[type=file] {
+.form-control[type="file"] {
     overflow: hidden;
+}
+
+.textarea {
+    @apply block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-sky-300 focus:bg-white focus:text-gray-700 focus:outline-none;
+}
+
+.input {
+    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50;
+}
+
+.checkbox {
+    @apply h-4 w-4 cursor-pointer appearance-none rounded-sm border border-gray-300 bg-white bg-contain bg-center bg-no-repeat align-top transition duration-200 checked:border-sky-400 checked:bg-sky-400 focus:outline-none;
+}
+
+.file-input {
+    @apply block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out file:rounded file:border-gray-300 file:bg-gray-200 file:text-base file:text-gray-700 hover:file:text-gray-50 hover:file:cursor-pointer hover:file:bg-gray-700 focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none focus:file:cursor-pointer;
 }
 

@@ -29,7 +29,7 @@
             <div class="block">
                 <div class="flex flex-row gap-x-2">
                     <x-link :route="route('goal.edit', $goal->id)" :linkText="__('Edit')"></x-link>
-                    <x-link :route="route('goal.index')" :linkText="__('Back')"></x-link>
+                    <x-link :route="route('goal.index')" :linkText="__('Back')" :linkType="'secondary'"></x-link>
                 </div>
             </div>
         </div>

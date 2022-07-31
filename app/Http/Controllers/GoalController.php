@@ -72,7 +72,7 @@ class GoalController extends Controller
 
         return redirect()->route('goal.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' hozzáadva a bakancslistádhoz.',
+                'message' => __('<b class="mr-1 ml-1">":name"</b> added to your bucketlist.', ['name' => htmlentities($request->title)]),
                 'type'    => 'success'
             ]
         ]);
@@ -133,7 +133,7 @@ class GoalController extends Controller
 
         return redirect()->route('goal.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' . htmlentities($request->title) . '</b>' . ' sikeresen módosítva.',
+                'message' => __('<b class="mr-1">":name"</b> successfully modified.', ['name' => htmlentities($request->title)]),
                 'type'    => 'success'
             ]
         ]);
@@ -153,7 +153,7 @@ class GoalController extends Controller
         $goal->deleteOrFail();
         return redirect()->route('goal.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' .  $oldTitle . '</b> sikeresen törölve.',
+                'message' => __('<b class="mr-1">":name"</b> successfully deleted.', ['name' => $oldTitle]),
                 'type'    => 'success'
             ]
         ]);

@@ -69,3 +69,11 @@ if (photoGalleryContainer) {
         });
     }
 }
+
+const notificationCloseBtn = document.querySelector('.btn-close');
+if (notificationCloseBtn) {
+    notificationCloseBtn.addEventListener('click', function () {
+        document.querySelector('.alert').style.display = 'none';
+    });
+}
+

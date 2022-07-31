@@ -35,7 +35,12 @@
                                 </div>
 
                                 <div class="flex h-8 gap-2" role="group">
-                                    <form action="{{ route('tag.destroy', $tag->id) }}" method="POST">
+                                    @php
+                                        $confirmMsg = __('Are you sure you want to delete :name?', ['name' => $tag->name]);
+                                    @endphp
+                                    <form action="{{ route('tag.destroy', $tag->id) }}" method="POST"
+                                        onSubmit="{{ 'return confirm("' . $confirmMsg . '");' }}">
+
                                         @method('DELETE')
                                         @csrf
                                         <x-delete-button :title="__('Delete')" :iconName="'trash-can'">

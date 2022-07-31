@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -20,9 +21,6 @@ class UserController extends Controller
     public function index()
     {
         $this->authorize('viewAny', User::class);
-
-        $user = Auth::user();
-        abort_unless(Gate::allows('viewAny', $user), 403);
     }
 
     /**
@@ -34,8 +32,7 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = Auth::user();
-        abort_unless(Gate::allows('create', $user), 403);
+        return view('admin.create');
     }
 
     /**
@@ -48,8 +45,33 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
 
-        $user = Auth::user();
-        abort_unless(Gate::allows('create', $user), 403);
+        $request->validate([
+            'name' => ['required', 'string'],
+            'role' => ['required', 'integer', 'min:1', 'max:2'],
+            'sex' => ['required', 'string'],
+            'email' => ['required', 'max:255'],
+            'password' => ['required', 'string'],
+        ]);
+
+        $newUser = new User([
+            'name' => htmlspecialchars($request->name),
+            'email' => htmlspecialchars($request->email),
+            'email_verified_at' => now(),
+            'password' => Hash::make($request->password),
+            'role' => intval($request->role), // 1 = admin, 2 = customer
+            'sex' => htmlspecialchars($request->sex),
+            'remember_token' => Str::random(10),
+        ]);
+
+        $newUser->save();
+
+
+        return redirect()->route('admin.index')->with([
+            'notification' => [
+                'message' => __('The user <b class="mr-1 ml-1">":name"</b> successfully created.', ['name' => htmlentities($request->name)]),
+                'type'    => 'success'
+            ]
+        ]);
     }
 
     /**
@@ -143,7 +165,7 @@ class UserController extends Controller
 
         return redirect()->route('user.show', Auth::user()->id)->with([
             'notification' => [
-                'message' => 'Frissítetted a profilodat.',
+                'message' => __('You have updated your profile.'),
                 'type'    => 'success'
             ]
         ]);
@@ -157,7 +179,18 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        // $this->authorize('delete', User::class);
         abort_unless(Gate::allows('delete', $user), 403);
+
+        $oldName = htmlentities($user->name);
+        $user->deleteOrFail();
+
+        return redirect()->route('admin.index')->with([
+            'notification' => [
+                'message' => __('The user <b class="mr-1 ml-1">":name"</b> successfully deleted.', ['name' => htmlentities($oldName)]),
+                'type'    => 'success'
+            ]
+        ]);
     }
 
     public function changePassword(Request $request)
@@ -171,7 +204,7 @@ class UserController extends Controller
 
         # A régi jelszó ellenőrzése
         if (!Hash::check($request->old_password, auth()->user()->password)) {
-            return back()->with('error', 'A régi jelszó nem egyezik!');
+            return back()->with('error', __('Old password does not match!'));
         }
 
         #Update the new Password
@@ -181,7 +214,7 @@ class UserController extends Controller
 
         return redirect()->route('user.show', Auth()->user()->id)->with([
             'notification' => [
-                'message' => 'A jelszó sikeresen megváltoztatva!',
+                'message' => __('You have successfully changed your password.'),
                 'type'    => 'success'
             ]
         ]);

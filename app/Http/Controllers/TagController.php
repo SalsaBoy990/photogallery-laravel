@@ -64,7 +64,7 @@ class TagController extends Controller
 
         return redirect()->route('tag.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' . htmlentities($request->name) . '</b> címke sikeresen létrehozva.',
+                'message' => __('The tag <b class="mr-1 ml-1">":name"</b> successfully created.', ['name' => htmlentities($request->name)]),
                 'type'    => 'success'
             ]
         ]);
@@ -115,8 +115,8 @@ class TagController extends Controller
         abort_unless(Gate::allows('update', $tag), 403);
 
         $request->validate([
-            'name' => ['required', 'min:3'],
-            'description' => ['required', 'min:10', 'unique:tags'],
+            'name' => ['required', 'min:3', 'max:255'],
+            'description' => ['required', 'max:255'],
         ]);
 
         $tag->update([
@@ -124,9 +124,9 @@ class TagController extends Controller
             'description' => $request->description,
         ]);
 
-        return redirect()->route('app.tag.index')->with([
+        return redirect()->route('tag.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' .  htmlentities($request->name) . '</b> címke sikeresen módosítva.',
+                'message' => __('The tag <b class="mr-1 ml-1">":name"</b> successfully modified.', ['name' => htmlentities($request->name)]),
                 'type'    => 'success'
             ]
         ]);
@@ -146,7 +146,7 @@ class TagController extends Controller
         $tag->deleteOrFail();
         return redirect()->route('tag.index')->with([
             'notification' => [
-                'message' => '<b class="mr-1">' .  $oldName . '</b> címke sikeresen törölve.',
+                'message' => __('The tag <b class="mr-1 ml-1">":name"</b> successfully deleted.', ['name' => $oldName]),
                 'type'    => 'success'
             ]
         ]);

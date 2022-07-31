@@ -25,14 +25,14 @@
 
 </head>
 
-<body class="overflow-x-hidden font-sans antialiased">
+<body class="{{ Auth::user()->role === 'admin' ? '' : 'overflow-x-hidden'}} font-sans antialiased">
     <!-- Container -->
     <div class="bg-grey-400 mx-auto">
         <!-- Screen -->
         <div class="flex min-h-screen flex-col">
 
             <!-- Page Heading Starts Here -->
-            <header class="bg-nav fixed top-0 left-0 right-0 z-50">
+            <header class="bg-nav fixed top-0 left-0 right-0 z-50" style="{{ Auth::user()->role === 'admin' ? 'background-color: #f43f5e' : '' }}">
                 <x-navbar :userName="Auth::user()->name ?? ''">
                 </x-navbar>
             </header>

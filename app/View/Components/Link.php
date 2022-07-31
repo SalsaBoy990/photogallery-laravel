@@ -18,7 +18,7 @@ class Link extends Component
      *
      * @return void
      */
-    public function __construct(string $route = '', string $iconName = '', string $linkText = '', string $title = '', string $linkType = 'normal')
+    public function __construct(string $route = '', string $iconName = '', string $linkText = '', string $title = '', string $linkType = 'primary')
     {
         $this->route    = $route;
         $this->iconName = $iconName;

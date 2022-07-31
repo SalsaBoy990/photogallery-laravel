@@ -25,7 +25,7 @@
                         <label for="name" class="form-label text-gray-700">{{ __('Username') }}</label>
                         <input type="text" id="name" name="name"
                             value="{{ $user->name ?? old('name') }}"
-                            class="form-control {{ $errors->has('name') ? ' border-rose-400' : '' }} mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50"
+                            class="form-control {{ $errors->has('name') ? ' border-rose-400' : '' }} mt-1 input"
                             placeholder="{{ __('min. 3, max. 100 characters') }}">
 
                         @if ($errors->has('name'))
@@ -38,7 +38,7 @@
                     <div class="mb-5 block">
                         <label for="description" class="form-label text-gray-700">{{ __('Short biography') }}</label>
                         <textarea
-                            class="form-control {{ $errors->has('short_bio') ? ' border-rose-400' : '' }} m-0 mt-1 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none"
+                            class="form-control {{ $errors->has('short_bio') ? ' border-rose-400' : '' }} m-0 mt-1 textarea"
                             id="short_bio" name="short_bio" rows="5" placeholder="{{ __('min 10, max 255 characters') }}"
                             max="512">{{ $user->short_bio ?? old('short_bio') }}</textarea>
 
@@ -61,7 +61,7 @@
                                 class="form-label mb-2 inline-block text-gray-700">{{ __('Change avatar image') }}
                                 <span class="sr-only">{{ __('Change avatar image') }}</span>
                                 <input
-                                    class="form-control {{ $errors->has('avatar_image') ? ' border-rose-400 ' : '' }} m0 m-0 block w-full rounded border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-1.5 text-base font-normal text-gray-700 transition ease-in-out file:rounded file:border-gray-300 file:bg-white file:text-base file:text-gray-700 hover:file:cursor-pointer hover:file:bg-gray-900 focus:border-sky-600 focus:bg-white focus:text-gray-700 focus:outline-none focus:file:cursor-pointer"
+                                    class="form-control {{ $errors->has('avatar_image') ? ' border-rose-400 ' : '' }} m0 m-0 file-input"
                                     type="file" id="avatar_image" name="avatar_image">
                             </label>
                         </div>
@@ -76,7 +76,7 @@
                     <div class="block">
                         <div class="flex flex-row gap-x-2">
                             <x-submit-button :linkText="__('Modify')"></x-submit-button>
-                            <x-link :route="route('user.show', $user->id)" :linkText="__('Cancel')"></x-link>
+                            <x-link :route="route('user.show', $user->id)" :linkText="__('Cancel')" :linkType="'secondary'"></x-link>
                         </div>
                     </div>
                 </form>
