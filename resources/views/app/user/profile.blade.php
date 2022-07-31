@@ -29,7 +29,9 @@
                 @endif
 
                 <h2 class="text-2xl font-bold">{{ $user->name }}</h2>
-                <small class="text-base text-gray-500">{{ $user->email }}</small>
+                <div class="text-base text-gray-500">{{ $user->email }}</div>
+                <div class="text-base text-gray-500">{{ $user->sex === 'male' ? __('Male') : __('Female') }}</div>
+                <div class="text-base text-gray-500">{{ $user->role === 'customer' ? __('Customer') : __('Admin') }}</div>
                 <p class="py-3 text-gray-700">{{ $user->short_bio }}</p>
 
                 <x-link :route="route('user.edit', $user->id)" :linkText="__('Edit')"></x-link>
